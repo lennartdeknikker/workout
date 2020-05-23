@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Workout logger</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>Workout Logger</h1>
+  <form action="/new" method="POST">
+    <label for="muscle-group"> </label>
+    <select name="muscle-group" id="muscle-group">
+      <option value="chest">chest</option>
+      <option value="biceps">biceps</option>
+      <option value="shoulders">shoulders</option>
+      <option value="back">back</option>
+      <option value="triceps">triceps</option>
+      <option value="legs">legs</option>
+      <option value="abs">abs</option>
+      <option value="abs">abs</option>
+    </select>
+    <input type="radio" name="new-exercise" id="new-exercise" value="true" checked>
+    <label for="true">new</label>
+    <input type="radio" name="new-exercise" id="new-exercise" value="false" checked>
+    <label for="false">existing</label>
+    <label for="existing-exercise"></label>
+    <select name="existing-exercise" id="exercise">
+    </select>
+    <input type="text" name="exercise" placeholder="exercise name">
+    <label for="weight"></label>
+    <input type="number" min="1" max="100" name="weight" placeholder="weight (kg)">
+    <label for="reps"></label>
+    <input type="number" min="1" max="30" name="reps" placeholder="reps">
+    <label for="difficulty"></label>
+    <select name="difficulty" id="difficulty">
+      <option value="1">easy</option>
+      <option value="2">doable</option>
+      <option value="3">hard</option>
+    </select>
+    <input type="submit" value="submit">
+  </form>
+</body>
+
+</html>
