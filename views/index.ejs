@@ -8,7 +8,7 @@
 
 <body>
   <h1>Workout Logger</h1>
-  <form action="/new" method="POST">
+  <form action="/new" method="POST" id="form-add">
     <label for="muscle-group"> </label>
     <select name="muscle-group" id="muscle-group">
       <option value="chest">chest</option>
@@ -20,14 +20,13 @@
       <option value="abs">abs</option>
       <option value="abs">abs</option>
     </select>
-    <input type="radio" name="new-exercise" id="new-exercise" value="true" checked>
-    <label for="true">new</label>
-    <input type="radio" name="new-exercise" id="new-exercise" value="false" checked>
-    <label for="false">existing</label>
-    <label for="existing-exercise"></label>
-    <select name="existing-exercise" id="exercise">
+    <label for="new-exercise">new exercise</label>
+    <input type="checkbox" id="checkbox-new" name="new-exercise">
+    <label for="exercise"></label>
+    <select name="existing-exercise" id="select-exercise">
+      <!-- add existing exercise names here -->
     </select>
-    <input type="text" name="exercise" placeholder="exercise name">
+    <input type="text" name="new-exercise" placeholder="exercise name" id="input-exercise" class="hidden">
     <label for="weight"></label>
     <input type="number" min="1" max="100" name="weight" placeholder="weight (kg)">
     <label for="reps"></label>
@@ -40,6 +39,7 @@
     </select>
     <input type="submit" value="submit">
   </form>
+  <script src="/javascripts/index.js"></script>
 </body>
 
 </html>
