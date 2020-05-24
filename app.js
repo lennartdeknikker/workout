@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser')
 var logger = require('morgan')
 
 var indexRouter = require('./routes/index')
+var progressRouter = require('./routes/progress')
 var newRouter = require('./routes/new')
 
 var app = express()
@@ -20,6 +21,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
+app.use('/progress', progressRouter)
 app.use('/new', newRouter)
 
 // catch 404 and forward to error handler
