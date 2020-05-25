@@ -11,12 +11,12 @@
 <body>
   <h1>Workout Logger</h1>
   <form action="/new" method="POST" id="form-add">
-    <input type="checkbox" id="checkbox-new" name="checkbox-new">
-    <label for="checkbox-new">new exercise</label>
+    <input type="checkbox" id="checkbox" name="checkbox">
+    <label for="checkbox">new exercise</label>
     <fieldset>
       <legend>Exercise</legend>
-      <label for="muscle-group"> </label>
-      <select class="restore-this" name="muscle-group" id="muscle-group">
+      <label for="muscle"> </label>
+      <select class="restore-this" name="muscle" id="muscle">
         <option value="chest">chest</option>
         <option value="biceps">biceps</option>
         <option value="shoulders">shoulders</option>
@@ -26,12 +26,13 @@
         <option value="abs">abs</option>
         <option value="abs">abs</option>
       </select>
-      <label for="existing-exercise"></label>
-      <select class="restore-this" name="existing-exercise" id="existing-exercise">
+      <label for="existing"></label>
+      <select class="restore-this" name="existing" id="existing">
+        <option value="1">test</option>
         <!-- add existing exercise names here -->
       </select>
-      <label for="new-exercise"></label>
-      <input type="text" name="new-exercise" placeholder="exercise name" id="new-exercise" class="hidden">
+      <label for="new"></label>
+      <input type="text" name="new" placeholder="exercise name" id="new" class="hidden">
 
     </fieldset>
     <fieldset>

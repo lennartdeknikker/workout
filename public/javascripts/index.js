@@ -1,6 +1,6 @@
-const checkboxNew = document.getElementById('checkbox-new')
-const newSelect = document.getElementById('existing-exercise')
-const newInput = document.getElementById('new-exercise')
+const checkboxNew = document.getElementById('checkbox')
+const newSelect = document.getElementById('existing')
+const newInput = document.getElementById('new')
 const elementsToRestore = document.querySelectorAll('.restore-this')
 
 checkboxNew.addEventListener('change', () => {    
