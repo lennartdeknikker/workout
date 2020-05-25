@@ -7,10 +7,14 @@ async function showResults() {
     let transformedResults = {}
 
     for (let result of results) {
-        if (!transformedResults[transformDate(result.date)]) {
-            transformedResults[transformDate(result.date)] = []
-        }        
-        transformedResults[transformDate(result.date)].push(result)  
+        const id = transformDate(result.date)
+        if (!transformedResults[id]) {
+            transformedResults[id] = {}
+            transformedResults[id].date = id
+            transformedResults[id].groups = []
+        }
+        if (!transformedResults[id].groups[result.muscle]) transformedResults[id].groups[result.muscle] = []
+        transformedResults[id].groups[result.muscle].push(result)  
     }
 
     console.log(transformedResults)
