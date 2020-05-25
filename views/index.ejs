@@ -29,6 +29,9 @@
       <label for="existing"></label>
       <select class="restore-this" name="existing" id="existing">
         <option value="1">test</option>
+        <% exercises.forEach(exercise => { %>
+        <option class="opt-<%= exercise.muscle %>" value="<%= exercise.name %>"><%= exercise.name %></option>
+        <% }) %>
         <!-- add existing exercise names here -->
       </select>
       <label for="new"></label>
