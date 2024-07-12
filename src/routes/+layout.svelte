@@ -28,8 +28,10 @@
 	}
 
 	:global(body) {
-		margin: 0;
+		margin: 0 auto;
 		overflow-x: hidden;
+		width: 100vw;
+    position: relative;
 	}
 
 	:global(h1) {
