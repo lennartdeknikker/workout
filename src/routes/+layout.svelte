@@ -1,5 +1,6 @@
 <script>
 	import Navigation from '../components/Navigation.svelte';
+	import TimerBar from '$components/TimerBar.svelte';
 </script>
 
 <svelte:head>
@@ -10,21 +11,39 @@
 		rel="stylesheet"
 	/>
 </svelte:head>
-
-<header>
-  <Navigation />
-</header>
-<main>
+<div class="Layout">
+	<header>
+		<Navigation />
+	</header>
+	<TimerBar />
 	<slot />
-</main>
+</div>
 
 <style>
 	:global(html) {
-    font-family: "Rubik", sans-serif;
+    position: relative;
+		font-family: 'Rubik', sans-serif;
 		font-size: 10px;
+		overflow-x: hidden;
 	}
 
-  :global(h1) {
-    font-size: 2rem;
-  }
+	:global(body) {
+		margin: 0;
+		overflow-x: hidden;
+	}
+
+	:global(h1) {
+		font-size: clamp(2.4rem, 5vw, 3.6rem);
+	}
+	:global(svg) {
+		width: 1em;
+	}
+
+	.Layout {
+		max-width: 100rem;
+		width: fit-content;
+		padding: 2.4rem;
+		box-sizing: content-box;
+		margin: 0 auto;
+	}
 </style>
