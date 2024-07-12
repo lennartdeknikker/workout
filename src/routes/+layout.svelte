@@ -45,5 +45,8 @@
 		padding: 2.4rem;
 		box-sizing: content-box;
 		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 	}
 </style>

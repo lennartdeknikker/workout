@@ -35,7 +35,6 @@
 		justify-content: center;
 		position: absolute;
 		right: 0;
-		bottom: 2.4rem;
 		background-color: pink;
 		background-color: var(--background-color);
 		z-index: 10;
