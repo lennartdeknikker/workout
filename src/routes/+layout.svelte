@@ -53,4 +53,9 @@
 		display: flex;
 		flex-direction: column;
 	}
+
+	header {
+		display: flex;
+		justify-content: center;
+	}
 </style>

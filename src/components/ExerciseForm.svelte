@@ -128,8 +128,8 @@
 
 			<!-- Exercise time -->
 			{#if selectedExercise?.time}
-				<label for="reps">Time</label>
-				<input type="number" bind:value={selectedTime} />
+				<label for="time">Time</label>
+				<input type="number" bind:value={selectedTime} name="time" id="time" />
 				<input
 					type="range"
 					min={selectedExercise.time.min}
@@ -259,7 +259,7 @@
 		padding: 0;
 		margin: 0;
 		display: flex;
-		flex-direction: column;
+		flex-wrap: wrap;
 		gap: 0.6rem;
 	}
 

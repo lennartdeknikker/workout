@@ -39,7 +39,7 @@
 			calc(var(--percentage-done, 0) / 2)
 		);
 		position: absolute;
-		right: 0;
+		right: calc(100vw - 100svw);
 		top: 0;
 		z-index: 10;
 		height: 100vh;
