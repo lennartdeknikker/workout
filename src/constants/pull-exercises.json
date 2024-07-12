@@ -1,0 +1,170 @@
+[
+  {
+    "type": "pull",
+    "id": "pull-ups",
+    "label": "Pull-Ups",
+    "sets": {
+      "min": 3,
+      "max": 4
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
+    "reps": {
+      "min": 6,
+      "max": 10
+    },
+    "rest": {
+      "min": 120,
+      "max": 150
+    }
+  },
+  {
+    "type": "pull",
+    "id": "kneeling-lat-pulldowns",
+    "label": "Kneeling Lat Pulldowns",
+    "sets": {
+      "min": 3,
+      "max": 4
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
+    "reps": {
+      "min": 10,
+      "max": 15
+    },
+    "rest": {
+      "min": 120,
+      "max": 150
+    }
+  },
+  {
+    "type": "pull",
+    "id": "barbell-row",
+    "label": "Barbell Row",
+    "sets": {
+      "min": 3,
+      "max": 4
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
+    "reps": {
+      "min": 10,
+      "max": 15
+    },
+    "rest": {
+      "min": 120,
+      "max": 150
+    }
+  },
+  {
+    "type": "pull",
+    "id": "reverse-grip-lat-pulldowns",
+    "label": "Reverse Grip Lat Pulldowns",
+    "sets": {
+      "min": 3,
+      "max": 4
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
+    "reps": {
+      "min": 8,
+      "max": 12
+    },
+    "rest": {
+      "min": 120,
+      "max": 120
+    }
+  },
+  {
+    "type": "pull",
+    "id": "chest-supported-rear-delt-row",
+    "label": "Chest Supported Rear Delt Row",
+    "sets": {
+      "min": 3,
+      "max": 4
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
+    "reps": {
+      "min": 10,
+      "max": 15
+    },
+    "rest": {
+      "min": 120,
+      "max": 120
+    }
+  },
+  {
+    "type": "pull",
+    "id": "narrow-grip-barbell-curl",
+    "label": "Narrow Grip Barbell Curl",
+    "sets": {
+      "min": 2,
+      "max": 3
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
+    "reps": {
+      "min": 8,
+      "max": 12
+    },
+    "rest": {
+      "min": 90,
+      "max": 120
+    }
+  },
+  {
+    "type": "pull",
+    "id": "kneeling-face-pulls",
+    "label": "Kneeling Face Pulls",
+    "sets": {
+      "min": 2,
+      "max": 2
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
+    "reps": {
+      "min": 10,
+      "max": 15
+    },
+    "rest": {
+      "min": 90,
+      "max": 90
+    }
+  },
+  {
+    "type": "pull",
+    "id": "lying-face-pulls",
+    "label": "Lying Face Pulls",
+    "sets": {
+      "min": 2,
+      "max": 2
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
+    "reps": {
+      "min": 10,
+      "max": 15
+    },
+    "rest": {
+      "min": 90,
+      "max": 90
+    }
+  }
+]

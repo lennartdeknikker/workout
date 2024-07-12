@@ -11,6 +11,10 @@
       "min": 6,
       "max": 8
     },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
     "rest": {
       "min": 120,
       "max": 180
@@ -23,6 +27,10 @@
     "sets": {
       "min": 3,
       "max": 4
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
     },
     "reps": {
       "min": 10,
@@ -41,6 +49,10 @@
       "min": 3,
       "max": 4
     },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
     "reps": {
       "min": 8,
       "max": 12
@@ -57,6 +69,10 @@
     "sets": {
       "min": 2,
       "max": 3
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
     },
     "reps": {
       "min": 10,
@@ -75,6 +91,10 @@
       "min": 2,
       "max": 3
     },
+    "weight": {
+      "min": 1,
+      "max": 120
+    },
     "reps": {
       "min": 10,
       "max": 15
@@ -91,6 +111,10 @@
     "sets": {
       "min": 2,
       "max": 3
+    },
+    "weight": {
+      "min": 1,
+      "max": 120
     },
     "reps": {
       "min": 10,

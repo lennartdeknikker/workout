@@ -1,0 +1,11 @@
+[
+  {
+    "type": "cardio",
+    "id": "cross-trainer",
+    "label": "Cross-trainer",
+    "time": {
+      "min": 0,
+      "max": 120
+    }
+  }
+]

@@ -45,10 +45,12 @@
 		max-width: 100rem;
 		width: fit-content;
 		padding: 2.4rem;
-		box-sizing: content-box;
+		box-sizing: border-box;
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
 	}
 </style>
