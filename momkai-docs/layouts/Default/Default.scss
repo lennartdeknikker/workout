@@ -1,0 +1,49 @@
+.Default {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  @include breakpoint(xxlarge) {
+    flex-direction: row;
+  }
+
+  main {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+    border: 1px solid #D0D7DE;
+    border-radius: 6px;
+
+    @include breakpoint(xxlarge) {
+      padding: 0 40px 80px;
+    }
+  }
+
+  aside {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    padding: 0 20px;
+    border: 1px solid #D0D7DE;
+    border-radius: 6px;
+    @include breakpoint(xxlarge) {
+      position: fixed;
+      overflow: auto;
+      width: calc((100vw - 900px) / 2 - 40px);
+      max-width: 400px;
+      max-height: calc(100vh - 40px);
+      padding: 0 40px;
+    }
+  }
+}
+
+.Default-description {
+  margin: 20px 0;
+  font-style: italic;
+  text-align: right;
+  color: rgb(114 114 114);
+  @include breakpoint(xxlarge) {
+    margin: 40px 0 20px;
+  }
+}

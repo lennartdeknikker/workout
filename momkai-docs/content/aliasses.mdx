@@ -1,0 +1,72 @@
+---
+title: Aliasses for zsh
+description: "Handy shortcuts to use within your terminal"
+---
+
+# Aliasses
+## .zshrc
+When using zsh, you are able to add aliasses.
+All your aliases are defined in ~/.zshrc. In this file you can also add your own.
+These are some examples:
+
+```
+# Configuration aliases
+alias zshrc="code ~/.zshrc"
+alias vhosts="code /usr/local/etc/httpd"
+alias hosts="code /private/etc/hosts"
+
+# General aliases
+alias www="cd ~/Web/"
+alias cp_ssh="pbcopy < ~/.ssh/id_ed25519.pub"
+
+alias s="spotify"
+function sp {
+    if [ "$1" != "" ]
+    then
+        spotify play $@
+    else
+        spotify pause
+    fi
+    }
+alias spl="spotify play list"
+
+# Yarn aliases
+alias yd="yarn dev"
+alias yb="yarn build"
+alias ys="yarn start"
+alias ysb="yarn storybook"
+
+# Git aliases
+alias ga="git add ."
+alias gc="git commit -m $1"
+alias gp="git push"
+alias gitup='f() { git add .; git commit -S -m $1; git push };f'
+
+alias newb='f() { git checkout -b $1; git push origin $1; git push --set-upstream origin $1 };f'
+alias rbranches="git branch | grep -v \"main\" | xargs git branch -D"
+
+# Composer aliases
+alias ci="composer install"
+alias cu="composer update"
+
+# apache aliases
+alias apstop="brew services stop httpd; sudo apachectl stop"
+alias apstart="brew services start httpd; sudo apachectl start"
+
+# prepare dev environment for given project
+alias prep='f() { cd ~/Web/$1; git pull; yarn install; code .; open https://github.com/Momkai/$1/pulls; yarn dev --open; };f'
+
+# find and list symbolic links
+alias findsl='find . -type l -ls'
+
+# download all momkai api images
+alias scp-momkai='cd ~/Web/momkai/momkai-api/web; scp -pr -P 2200 momkai@172.104.133.165:/data/projects/momkai-api/web/dynamic .'
+alias scp-more='cd ~/Web/more-momkai/more-backend/web; scp -pr -P 2200 momkai@172.104.131.82:/data/projects/more-momkai/more-cms/web/dynamic .'
+
+# clear cache for dugout
+alias dugoutphp="sphp 7.3"
+alias dcc="/usr/local/Cellar/php@7.3/7.3.33_3/bin/php ~/Web/dugout-moodle/moodle/admin/cli/purge_caches.php"
+alias dugoutct="ssh dugout@82.94.253.248"
+
+alias dka="docker kill $(docker ps -q)"
+```

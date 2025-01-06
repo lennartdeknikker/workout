@@ -1,0 +1,26 @@
+.IndexList-title {
+  color: black;
+
+  @include breakpoint(xxlarge) {
+    margin-top: 32px;
+  }
+}
+
+.LinkList {
+  padding-left: 20px;
+  list-style-type: none;
+}
+
+.LinkList-item {
+  font-weight: normal;
+  text-transform: capitalize;
+
+  &.is-active {
+    font-weight: 600;
+  }
+}
+
+.LinkList-item .LinkList-item {
+  position: relative;
+  list-style-type: disc;
+}

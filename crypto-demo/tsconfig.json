@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "composite": true,
+    "declarationMap": true,
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "outDir": "dist",
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*", "src/constants/demo-passport.json", "package.json"]
+}

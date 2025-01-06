@@ -1,0 +1,66 @@
+---
+title: DDEV installation guide
+description: "A guide on getting DDEV up and running on your local machine."
+---
+
+# DDEV Installation guide
+
+## Prerequisites
+To run this project you will need to run the backend using [ddev](https://ddev.com/) & [docker](https://www.docker.com/).
+You can read more about installing those applications on your laptop here:
+- installation guide [DDEV](https://ddev.com/get-started/)
+- installation guide [Docker](https://ddev.readthedocs.io/en/latest/users/install/docker-installation/)
+
+If you have these applications installed, you can run the project by going over the following steps:
+
+
+## Steps
+1. Clone the repository to your local folder.
+2. Cd to the project backend folder.
+    - `cd ~Web/nfp/nfp-backend`
+3. Get docker running.
+4. *Kill all currently active docker containers. (optional)*
+    - `docker kill $(docker ps -q)`
+5. Copy the .env.example.dev file.
+    - `cp .env.example.dev .env`
+6. In that env file, update these two variables with the ones in [Servd](https://app.servd.host/SeincdoE/project/nfp-voedselpartn/assets).
+    ```
+    SERVD_PROJECT_SLUG=
+    SERVD_SECURITY_KEY=
+    ```
+7. Get the Craft security key from Project settings > Craft Config in [Servd](https://app.servd.host/SeincdoE/project/nfp-voedselpartn/craft)
+    ```
+    CRAFT_SECURITY_KEY=
+    ```
+8. Start ddev.
+    - `ddev start` 
+9. Pull the assets.
+    - `ddev craft servd-asset-storage/local/pull-assets`
+10. Pull the database.
+    - `ddev craft servd-asset-storage/local/pull-database`
+11. Install backend packages.
+    - `ddev composer install`
+12. Your backend should now be running at http://nfp.ddev.site/admin.
+
+
+## Useful commands
+
+```bash
+# start DDEV environment for NFP
+ddev start nfp
+
+# check details for DDEV installation
+ddev describe
+
+# Syncs a remote env on the Servd Asset Platform with the 'local' env.
+ddev craft servd-asset-storage/local/pull-assets
+
+# Pulls a database dump from a remote Servd environment into the local database.
+ddev craft servd-asset-storage/local/pull-database
+
+# Syncs the 'local' env's assets with another env.
+ddev craft servd-asset-storage/local/push-assets
+
+# Pushes a local database dump to a remote Servd environment.
+ddev craft servd-asset-storage/local/push-database         
+```

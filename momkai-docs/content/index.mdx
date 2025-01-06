@@ -1,0 +1,133 @@
+---
+title: My docs introduction
+description: "Introduction"
+---
+
+# My docs
+
+## Usage
+Usage is very simple. In the content folder you can find all the documentation. Adding or editing folders and the markdown files in there will automatically trigger a new build and generate those files as pages.
+These pages will be added to the index based on the folder structure.
+
+The `.mdx` files can contain both [markdown](https://www.markdownguide.org/) as well as plain html and components.
+
+### Meta tags
+In the top of each markdown file you see this section:
+```md
+---
+title: ESlint configuration standards
+description: "What we use to lint our code"
+layout: "index"
+---
+```
+Meta tags are defined here as well as the layout that is used.
+
+### Layouts
+Layouts are defined in the layouts folder. The markdown content will be embedded in these layouts. When no specific layout is defined, the default layout will be applied. New layouts can be added in this folder, but will then need to be added to the switch in this `getLayout()` function:
+
+```js
+Page.getLayout = (page) => {
+  const { layout } = page.props;
+
+  switch (layout) {
+    case 'index':
+      return <IndexLayout>{page}</IndexLayout>
+		case 'new-layout:
+			return <NewLayout>{page}</NewLayout>
+    default:
+      return <Default>{page}</Default>;
+  }
+};
+
+```
+
+## Interface ideas
+- [DevDocs API Documentation](https://devdocs.io/)
+- [Style Guide — Vue.js](https://v2.vuejs.org/v2/style-guide/)
+
+
+## Previous endeavours
+- [momkai-js-utils](https://github.com/Momkai/momkai-js-utils)
+- [eslint-config-momkai](https://github.com/Momkai/eslint-config-momka)
+- [momkai-project-boilerplate](https://github.commomkai-project-boilerplat/Momkai/)
+- [CodeExamples](https://github.com/Momkai/CodeExample)
+- [momkai-code](https://github.com/Momkai/momkai-code)
+- [cli-tools](https://github.com/Momkai/cli-tool)
+
+## Index
+- Standards
+	- eslint configuration
+	- style-lint configuration
+	- file structure and naming conventions
+	- css
+		- naming
+		- formatting
+		- comments
+		- stylelint configuration
+-   Collaboration guidelines
+	- branch & pull request naming conventions
+	- how to pull assets from our servers
+	- how to pull the database from our servers
+	- How to pick up an issue
+- Our technical stack
+	- React
+		- Docs
+		- Component structure
+			- Imports
+				- React / next
+				- ext. packages
+				- subcomponents
+				- utilities
+				- files (svg etc.)
+			- Component
+				- properties
+				- context 
+				- state
+				- effects
+				- render (return ….)
+			- Proptypes
+			- defaultprops
+			- export line
+		- Component boilerplate 
+			- `npx momkai-code create component` 
+	- NextJS
+		- Links to relevant docs
+			- Image component
+	- GraphQL
+		- GraphQL and Craft
+		- GraphQL and Next
+		- What’s the schema file?
+		- query structure
+	- GSAP
+		- pointing to momkai motion repo
+		- usage within React
+		- docs
+	- SwiperJS
+		- usage within React
+		- docs
+	- (Vue)
+	- (Svelte)
+- Deployment
+	- reboot server on linode
+	- SSL certificates
+	- uptime robot
+	- Netlify
+		- serverless functions
+	- Vercel
+	- DeployHQ
+- VSCode extensions
+- Interesting socials
+	- twitter feed
+- Manuals
+	- GPG keys
+	- SSH connections
+	- Git setup
+	- Docker setup
+	- Nitro
+	- Apache setup
+	- iTerm and ZSH
+- Courses
+	- craftQuest
+	- Frontend masters
+	- LevelUp
+	- WesBos

@@ -1,0 +1,11 @@
+{
+  "DateOfBirth": "2020-01-02",
+  "DocumentExpiryDate": "2025-01-01",
+  "DocumentIssuer": "NL",
+  "DocumentNumber": "123456789012",
+  "DocumentType": "IdentityCard",
+  "GivenNames": "Tim Bakker",
+  "Nationality": "NLD",
+  "Sex": "M",
+  "Surname": "Bakker"
+}

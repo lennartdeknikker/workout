@@ -1,0 +1,18 @@
+---
+title: Gsap
+description: "Gsap documentation"
+---
+
+# GSAP
+For our more elaborate animations, we use GSAP.
+
+## Links
+- <a href="https://greensock.com/docs/v3/GSAP/gsap.context()">More information on gsap context</a>
+
+
+## Code examples
+
+### Memberful header animation <a href="https://github.com/Momkai/memberful-design/blob/main/components/HeaderGuest/HeaderGuest.tsx" target="_blank"><Icon name="link" /></a>
+
+<Image src="/images/memberful-header.png" width="2800" height="1656"/>
+This is a good example on using gsap within React with Nextjs. In this component we used gsap context to optimize the component by only using one ref on the animation wrapper and use that as context for other animated parts. We then were able to move the whole animation inside a custom hook, which makes it easy to keep concerns separated. The whole animation can now be removed or disabled by just commenting out the hook.
