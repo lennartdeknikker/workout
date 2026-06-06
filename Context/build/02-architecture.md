@@ -2,27 +2,28 @@
 
 ## 1. Stack summary
 
-| Concern              | Choice                                   | Notes                                                       |
-| -------------------- | ---------------------------------------- | ----------------------------------------------------------- |
-| Framework            | SvelteKit (Svelte 5 runes)               | SSR + form actions + endpoints                              |
-| Language             | TypeScript (strict)                      | TS everywhere feasible                                      |
-| Adapter              | `@sveltejs/adapter-node`                 | Long-lived Node server in Docker (replaces adapter-netlify) |
-| DB                   | PostgreSQL 16                            | Single datastore                                            |
-| ORM                  | Drizzle ORM + drizzle-kit                | Typed schema + SQL migrations                               |
-| Auth                 | better-auth (Drizzle adapter)            | Email+password, session cookies                             |
-| Validation           | Zod                                      | Shared client/server schemas                                |
-| Styling              | Scoped Svelte CSS + design tokens        | No heavy UI framework (keep it light for the Pi)            |
-| Unit/component tests | Vitest + vitest-browser-svelte           |                                                             |
-| E2E tests            | Playwright                               | Against a real Postgres test DB                             |
-| Runtime              | Node 20 LTS (ARM64)                      | Matches Raspberry Pi                                        |
-| Package manager      | npm                                      | Lockfile already present                                    |
-| Container            | Docker + docker compose                  | app + postgres                                              |
-| Ingress/TLS          | Cloudflare Tunnel (recommended) or Caddy | Public HTTPS without port-forwarding                        |
-| PWA                  | `@vite-pwa/sveltekit`                    | Manifest + service worker                                   |
+| Concern              | Choice                                     | Notes                                                       |
+| -------------------- | ------------------------------------------ | ----------------------------------------------------------- |
+| Framework            | SvelteKit (Svelte 5 runes)                 | SSR + form actions + endpoints                              |
+| Language             | TypeScript (strict)                        | TS everywhere feasible                                      |
+| Adapter              | `@sveltejs/adapter-node`                   | Long-lived Node server in Docker (replaces adapter-netlify) |
+| DB                   | PostgreSQL 16                              | Single datastore                                            |
+| Data layer           | Kysely (typed query builder) — **no ORM**  | Typed queries over a shared `pg` pool                       |
+| Migrations           | Plain SQL files + `scripts/migrate.js`     | CLI-free runner (depends only on `pg`)                      |
+| Auth                 | better-auth (built-in Kysely/`pg` adapter) | Email+password, session cookies; owns its own tables        |
+| Validation           | Zod                                        | Shared client/server schemas                                |
+| Styling              | Scoped Svelte CSS + design tokens          | No heavy UI framework (keep it light for the Pi)            |
+| Unit/component tests | Vitest + vitest-browser-svelte             |                                                             |
+| E2E tests            | Playwright                                 | Against a real Postgres test DB                             |
+| Runtime              | Node 20 LTS (ARM64)                        | Matches Raspberry Pi                                        |
+| Package manager      | npm                                        | Lockfile already present                                    |
+| Container            | Docker + docker compose                    | app + postgres                                              |
+| Ingress/TLS          | Cloudflare Tunnel (recommended) or Caddy   | Public HTTPS without port-forwarding                        |
+| PWA                  | `@vite-pwa/sveltekit`                      | Manifest + service worker                                   |
 
 ## 2. Repository structure (target)
 
-Keep the existing path-alias style (`$components`, `$interfaces`/`$lib`, etc.) and extend it.
+Path aliases: `$lib`, `$components` (→ `src/components`), `$server` (→ `src/lib/server`).
 
 ```
 workout/
@@ -33,10 +34,9 @@ workout/
 │  ├─ lib/
 │  │  ├─ server/
 │  │  │  ├─ db/
-│  │  │  │  ├─ index.ts        # drizzle client (pg Pool)
-│  │  │  │  ├─ schema.ts       # Drizzle tables (see 03)
-│  │  │  │  └─ migrate.ts      # run migrations on boot
-│  │  │  ├─ auth.ts            # better-auth server instance
+│  │  │  │  ├─ index.ts        # pg Pool + typed Kysely<AppDB> instance
+│  │  │  │  └─ types.ts        # Kysely table interfaces (see 03)
+│  │  │  ├─ auth.ts            # better-auth server instance (shares the pg pool)
 │  │  │  ├─ exercisedb.ts      # ExerciseDB proxy client (server-only, sets User-Agent)
 │  │  │  └─ repositories/      # query funcs: exercises.ts, setLog.ts, history.ts
 │  │  ├─ auth-client.ts        # better-auth client
@@ -58,8 +58,9 @@ workout/
 │     ├─ account/
 │     └─ api/
 │        └─ exercise-search/   # +server.ts (search) and [id]/+server.ts (detail)
-├─ drizzle/                    # generated migrations
-├─ drizzle.config.ts
+├─ migrations/                 # plain SQL: 0000_auth.sql, 0001_app_tables.sql, …
+├─ scripts/migrate.js          # forward-only SQL runner (tracks _app_migrations)
+├─ better-auth.config.ts       # CLI-only auth config (regenerate auth schema SQL)
 ├─ tests/
 │  ├─ unit/                    # vitest (domain, stores, schemas)
 │  └─ e2e/                     # playwright specs + fixtures
@@ -102,10 +103,12 @@ Never expose `DATABASE_URL` or `BETTER_AUTH_SECRET` to the client. Only `PUBLIC_
 
 ## 4. Auth architecture (better-auth)
 
-- Configure better-auth in `src/lib/server/auth.ts` with the **Drizzle adapter** and the
-  **email+password** provider enabled (no email verification required in v1; can enable later).
-- better-auth owns its tables (`user`, `session`, `account`, `verification`) — generated via its
-  Drizzle schema/CLI and included in `drizzle/` migrations (see `03-data-model.md`).
+- Configure better-auth in `src/lib/server/auth.ts` with `database: pool` (the shared `pg` Pool — this
+  selects better-auth's **built-in Kysely adapter**) and the **email+password** provider enabled
+  (no email verification in v1; can enable later). Add the `sveltekitCookies(getRequestEvent)` plugin.
+- better-auth owns its tables (`user`, `session`, `account`, `verification`). Their DDL is captured
+  once via the CLI into `migrations/0000_auth.sql` (committed), so runtime/deploy is CLI-free. The
+  CLI loads `better-auth.config.ts` (a SvelteKit-import-free mirror of the auth config).
 - `hooks.server.ts`:
   - On every request, resolve the session from the cookie and set `event.locals.user` / `session`.
   - **Route guard:** if the path is not under `(auth)` and there's no session → redirect to
@@ -147,8 +150,9 @@ upstream, lets us set headers, and lets us add caching/rate-limiting.
 
 ### Migrations on boot
 
-`src/lib/server/db/migrate.ts` runs `drizzle-kit` migrations (or `migrate()` from drizzle) before
-the server accepts traffic. Idempotent.
+The container `CMD` runs `node scripts/migrate.js && node build`: the runner applies every pending
+`migrations/*.sql` (auth tables first, then app tables) inside transactions, tracked in
+`_app_migrations`. Idempotent and CLI-free (only needs `pg`).
 
 ### Backups
 
@@ -195,6 +199,6 @@ The app is internet-exposed and installable, but the Pi is typically behind home
 - `svelte.config.js`: swap adapter to `adapter-node`; keep/extend aliases (`$components`,
   `$lib`, add `$server` → `src/lib/server` if desired).
 - Remove `firebase`, `@sveltejs/adapter-netlify`, `netlify.toml`.
-- Add: `drizzle-orm`, `drizzle-kit`, `postgres`/`pg`, `better-auth`, `zod`, `@vite-pwa/sveltekit`,
-  `vitest`, `vitest-browser-svelte`, `@playwright/test`.
+- Runtime deps added: `better-auth`, `kysely`, `pg`, `zod`. Still to add: `@vite-pwa/sveltekit`.
+  (`@vite-pwa/sveltekit`, Rubik font, and the minimal monochrome aesthetic come with the UI phases.)
 - Keep Rubik font + the minimal black/white aesthetic.

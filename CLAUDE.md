@@ -16,7 +16,7 @@ The complete, decision-locked spec lives in **`Context/build/`**. Read it before
 1. `Context/build/00-overview.md` — summary, **locked decisions**, glossary
 2. `Context/build/01-product-spec.md` — features, flows, screens, acceptance criteria
 3. `Context/build/02-architecture.md` — stack, structure, deployment, networking, PWA, security
-4. `Context/build/03-data-model.md` — Postgres schema, Drizzle, types, validation
+4. `Context/build/03-data-model.md` — Postgres schema (SQL), Kysely types, validation
 5. `Context/build/04-api-and-routes.md` — routes, endpoints, ExerciseDB proxy, actions
 6. `Context/build/05-ui-ux.md` — design system, components, the progressive multi-tab form
 7. `Context/build/06-testing.md` — TDD workflow + concrete test inventory
@@ -26,9 +26,11 @@ The complete, decision-locked spec lives in **`Context/build/`**. Read it before
 
 ## Tech stack (locked)
 
-SvelteKit + Svelte 5 (runes) · TypeScript (strict) · PostgreSQL · Drizzle ORM + drizzle-kit ·
-better-auth (email+password, multi-user) · `adapter-node` · Zod · Vitest + vitest-browser-svelte ·
-Playwright · Docker (ARM64) · PWA (`@vite-pwa/sveltekit`) · Cloudflare Tunnel/Caddy for HTTPS.
+**SvelteKit monolith** (better-auth + all APIs live in SvelteKit — no separate server) · Svelte 5 (runes) ·
+TypeScript (strict) · PostgreSQL · **Kysely** (typed query builder) + plain SQL migrations ·
+**better-auth** (email+password, multi-user; owns its own tables) · `adapter-node` · Zod ·
+Vitest + vitest-browser-svelte · Playwright · Docker (ARM64) · PWA (`@vite-pwa/sveltekit`) ·
+Cloudflare Tunnel/Caddy for HTTPS. **No ORM (no Drizzle/Prisma).**
 
 ## Non-negotiable rules
 
@@ -54,16 +56,19 @@ npm run dev          # local dev server
 npm run build        # production build (adapter-node → build/)
 npm run check        # svelte-check / tsc
 npm run lint         # prettier --check + eslint
-npm run test         # vitest (unit + component)   [add in Phase 0]
-npm run test:e2e     # playwright                   [add in Phase 0]
-# drizzle: generate/apply migrations via drizzle-kit (see Context/build/02 & 03)
-# docker: `docker compose -f docker/docker-compose.yml up` (app + postgres)
+npm run test:unit    # vitest (unit + browser-mode component)
+npm run test:e2e     # playwright
+npm run db:migrate   # apply migrations/*.sql (auth + app tables, CLI-free) via scripts/migrate.js
+# dev db:   docker compose --env-file .env -f docker/docker-compose.yml up -d db   (host port 5544)
+# full stack: docker compose --env-file .env -f docker/docker-compose.yml up --build
 ```
 
 ## Conventions
 
-- Path aliases: `$components`, `$lib` (+ `$server` → `src/lib/server` if added). Keep existing style.
-- Numeric DB columns come back as **strings** (Drizzle) — convert at the domain boundary.
+- Path aliases: `$lib`, `$components` (→ `src/components`), `$server` (→ `src/lib/server`).
+- DB access: typed **Kysely** instance at `$lib/server/db`; better-auth shares the same `pg` pool and
+  manages `user`/`session`/`account`/`verification`. Schema changes = a new `migrations/NNNN_*.sql`.
+- Numeric/`date` columns come back as **strings** (pg driver) — convert at the domain boundary.
 - Prefer SvelteKit `load` + form actions over ad-hoc client fetch; `+server.ts` only for the
   ExerciseDB typeahead.
 - Match the surrounding code's style; minimal monochrome UI; large tap targets (≥44px); mobile-first.

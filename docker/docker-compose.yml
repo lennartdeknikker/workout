@@ -1,0 +1,43 @@
+# Trainmate — app + Postgres.
+# Local dev: `docker compose -f docker/docker-compose.yml up db` (just Postgres; run the app with `npm run dev`).
+# Full stack / Pi:  `docker compose -f docker/docker-compose.yml up --build`.
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: trainmate
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-trainmate}
+      POSTGRES_DB: trainmate
+    ports:
+      # Host 5544 → container 5432 (5432 is often taken by other local Postgres instances).
+      - '5544:5432'
+    volumes:
+      - trainmate_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U trainmate -d trainmate']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # In-compose the app talks to the db service over the compose network.
+      DATABASE_URL: postgres://trainmate:${POSTGRES_PASSWORD:-trainmate}@db:5432/trainmate
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:?set BETTER_AUTH_URL}
+      PUBLIC_APP_URL: ${PUBLIC_APP_URL:?set PUBLIC_APP_URL}
+      EXERCISEDB_BASE_URL: ${EXERCISEDB_BASE_URL:-https://oss.exercisedb.dev/api/v1}
+      PORT: '3000'
+    ports:
+      - '3000:3000'
+
+volumes:
+  trainmate_pgdata:

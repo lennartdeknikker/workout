@@ -3,28 +3,29 @@
 Phased plan. Each phase is independently shippable/testable and ends with green tests. TDD throughout
 (write tests with/before implementation). Earlier phases unblock later ones.
 
-## Phase 0 — Project reset & toolchain
+## Phase 0 — Project reset & toolchain ✅ DONE
 
-- Remove Firebase, adapter-netlify, `netlify.toml`, unused `src/constants/*.json`, old session/auth bits.
-- Add deps: drizzle-orm, drizzle-kit, postgres driver, better-auth, zod, @vite-pwa/sveltekit, vitest,
-  vitest-browser-svelte, @playwright/test.
-- Switch to `adapter-node`. Set up Vitest + Playwright configs and npm scripts.
-- Add `.env.example`, `robots.txt`, global `noindex`.
-- **Done when:** `npm run check`, `lint`, `test` (empty), and a hello-world e2e all pass; app boots.
+- Removed Firebase, adapter-netlify, `netlify.toml`, static-JSON exercises, old session/auth.
+- Fresh `sv` scaffold: SvelteKit 2 + Svelte 5, `adapter-node`, Vitest (+ vitest-browser-svelte),
+  Playwright, ESLint, Prettier. `$components`/`$server` aliases, `robots.txt` Disallow + `noindex`.
+- **Verified:** `npm run check`, `lint`, `build`, `test:unit` all green.
 
-## Phase 1 — Database & infra skeleton
+## Phase 1 — Database & infra skeleton ✅ DONE
 
-- `docker/Dockerfile` (multi-stage, arm64) + `docker-compose.yml` (app + postgres + volume + healthcheck).
-- Drizzle: `schema.ts` (enums, `exercise`, `set_log`), `drizzle.config.ts`, first migration, boot migrate.
-- DB client + repository stubs. Testcontainers/compose test DB wired into Vitest/Playwright.
-- **Done when:** `docker compose up` runs app + db; migrations apply; a repo round-trip test passes.
+- `docker/docker-compose.yml` (postgres + app, volume, healthcheck; host port 5544) + multi-stage `docker/Dockerfile`.
+- `migrations/0000_auth.sql` + `migrations/0001_app_tables.sql` (enums, `exercise`, `set_log`, indexes, FKs).
+- `scripts/migrate.js` (CLI-free SQL runner, `_app_migrations`); typed Kysely `db` + `AppDB` types.
+- **Verified:** dropping/recreating the schema and running the runner rebuilds all 7 tables.
+- _Remaining:_ Testcontainers/compose test DB wired into Vitest/Playwright (do with Phase 3+ tests).
 
-## Phase 2 — Auth (better-auth)
+## Phase 2 — Auth (better-auth) ✅ CORE DONE
 
-- Configure better-auth (email+password, Drizzle adapter); generate its tables into migrations.
-- `hooks.server.ts` session resolution + route guard; `app.d.ts` locals.
-- `/signup`, `/login`, `/account` (sign-out) pages + actions; redirect logic.
-- **Done when:** e2e #1 (sign up → guarded `/workout` → sign out → sign in) passes; unauth redirects work.
+- better-auth (email+password) on the shared `pg` pool; `sveltekitCookies` plugin; auth schema captured to SQL.
+- `hooks.server.ts` session resolution + route guard; `app.d.ts` locals typed from `auth.$Infer.Session`.
+- `/login`, `/signup` pages (authClient) + sign-out; redirect-with-`?redirect=` logic.
+- **Verified (curl smoke):** sign-up 200 + session, get-session 200, `/workout` 200 with cookie /
+  303→`/login` without, sign-in 200, wrong password 401, user row persisted.
+- _Remaining:_ `/account` page; convert e2e #1 into a Playwright spec; password-strength UX polish.
 
 ## Phase 3 — Exercise library + ExerciseDB proxy
 

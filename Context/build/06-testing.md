@@ -75,13 +75,13 @@ Run against a built app pointed at an **isolated Postgres test database**; reset
 ## 6. Test infrastructure
 
 - **Test DB:** a dedicated Postgres (a `docker compose` test service or **Testcontainers**). Run
-  drizzle migrations before the suite. Truncate app tables between tests for isolation.
+  `node scripts/migrate.js` against it before the suite. Truncate app tables between tests for isolation.
 - **Auth in e2e:** prefer a programmatic login helper (API sign-up/sign-in + storageState) over
   driving the UI in every spec; have one spec exercise the real auth UI.
 - **ExerciseDB in e2e:** **do not hit the live OSS API in CI** — stub `/api/exercise-search*` (Playwright
   route interception or an env-flagged fake client) with the fixed sample payloads in `04 §3`. Keep
   one optional, non-CI "live" smoke test if desired.
-- **Seeding:** expose a guarded test-only helper (or direct Drizzle inserts) to create users, exercises,
+- **Seeding:** expose a guarded test-only helper (or direct Kysely inserts) to create users, exercises,
   and historical `set_log` rows for history/isolation specs.
 - **CI gate:** `lint` + `check` + `test` (unit/component) on every push; `test:e2e` on PRs.
 

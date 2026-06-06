@@ -10,22 +10,28 @@ installable to your phone's home screen.
 
 ## Stack
 
-SvelteKit + Svelte 5 (runes) · TypeScript · PostgreSQL · Drizzle ORM · better-auth (email+password) ·
-`adapter-node` · Vitest + `vitest-browser-svelte` · Playwright · Docker.
+SvelteKit (monolith) + Svelte 5 (runes) · TypeScript · PostgreSQL · Kysely (typed, no ORM) + SQL
+migrations · better-auth (email+password) · `adapter-node` · Vitest + `vitest-browser-svelte` ·
+Playwright · Docker.
 
 ## Develop
 
 ```bash
 npm install
-npm run dev            # http://localhost:5173
+cp .env.example .env                                                   # adjust if needed
+docker compose --env-file .env -f docker/docker-compose.yml up -d db    # Postgres on host :5544
+npm run db:migrate                                                     # apply migrations/*.sql
+npm run dev                                                            # http://localhost:5173
 ```
+
+First time only: `npx playwright install chromium` (for component/e2e tests).
 
 ## Scripts
 
 | Command             | What it does                                                                    |
 | ------------------- | ------------------------------------------------------------------------------- |
 | `npm run dev`       | Dev server                                                                      |
-| `npm run build`     | Production build (adapter-node → `build/`)                                       |
+| `npm run build`     | Production build (adapter-node → `build/`)                                      |
 | `npm run preview`   | Preview the production build                                                    |
 | `npm run check`     | `svelte-check` / type-check                                                     |
 | `npm run lint`      | Prettier check + ESLint                                                         |

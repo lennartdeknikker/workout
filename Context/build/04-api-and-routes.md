@@ -25,7 +25,7 @@ JSON (the ExerciseDB typeahead). Everything is auth-guarded except `(auth)` rout
 
 ## 2. Auth (better-auth)
 
-- `src/lib/server/auth.ts` exports the configured better-auth instance (email+password, Drizzle adapter).
+- `src/lib/server/auth.ts` exports the configured better-auth instance (email+password, shared `pg` pool → built-in Kysely adapter).
 - better-auth's request handler is mounted (its catch-all route, e.g. `/api/auth/[...all]/+server.ts`)
   per better-auth's SvelteKit guide.
 - `/login` and `/signup` `+page.server.ts` actions call better-auth's sign-in/sign-up APIs, set the

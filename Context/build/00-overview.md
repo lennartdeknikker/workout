@@ -11,7 +11,7 @@ Read the documents in order:
 | 00  | `00-overview.md` (this file) | Summary, locked decisions, glossary                                                             |
 | 01  | `01-product-spec.md`         | Vision, users, feature specs, user flows, screen-by-screen behaviour, acceptance criteria       |
 | 02  | `02-architecture.md`         | Tech stack, repo structure, deployment (Docker + Raspberry Pi), networking/HTTPS, PWA, security |
-| 03  | `03-data-model.md`           | Postgres schema, Drizzle definitions, TypeScript types, validation rules                        |
+| 03  | `03-data-model.md`           | Postgres schema (SQL DDL), Kysely table types, validation rules                                 |
 | 04  | `04-api-and-routes.md`       | SvelteKit routes, server endpoints, ExerciseDB proxy, form actions                              |
 | 05  | `05-ui-ux.md`                | Design system, components, the progressive-disclosure multi-tab form, navigation, timer         |
 | 06  | `06-testing.md`              | TDD workflow, unit/component/e2e tooling, concrete test inventory                               |
@@ -54,10 +54,14 @@ These were decided with the product owner and are **not open for re-litigation**
 
 ### Technical
 
-- **SvelteKit + Svelte 5 + TypeScript** (TS everywhere it's possible).
+- **SvelteKit monolith + Svelte 5 + TypeScript** (TS everywhere it's possible). better-auth and all
+  app APIs live inside SvelteKit — **no separate backend server** (e.g. no Fastify).
 - **PostgreSQL** as the only datastore.
-- **Drizzle ORM** + `drizzle-kit` migrations.
-- **better-auth** for authentication (Drizzle adapter).
+- **No ORM.** Typed queries via **Kysely**; schema via **plain SQL migrations** in `migrations/*.sql`,
+  applied by a tiny runner (`scripts/migrate.js`, depends only on `pg`).
+- **better-auth** for authentication — given the shared `pg` pool, it **owns and creates its own
+  tables** (`user`, `session`, `account`, `verification`). Their DDL is captured as a committed SQL
+  migration so deploys are CLI-free.
 - **adapter-node** (replacing adapter-netlify) — the app runs as a long-lived Node server.
 - Runs **on a Raspberry Pi in Docker** (`docker compose`: app + Postgres). ARM64.
 - **Internet-exposed + installable PWA.** Reached via a public hostname over **HTTPS**;
