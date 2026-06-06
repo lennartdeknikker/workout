@@ -4,21 +4,28 @@
 	import { page } from '$app/state';
 	import RestTimer from '$components/RestTimer.svelte';
 	import { onMount } from 'svelte';
+	import { pwaInfo } from 'virtual:pwa-info';
 	import type { LayoutData } from './$types';
 
 	let { children, data }: { data: LayoutData; children: import('svelte').Snippet } = $props();
 
 	const showNav = $derived(!!data.user && !['/login', '/signup'].includes(page.url.pathname));
+	const webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '';
 
-	// Let the server compute "today" in the user's zone for the workout/history views.
 	onMount(() => {
+		// Let the server compute "today" in the user's zone for the workout/history views.
 		const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		document.cookie = `tz=${encodeURIComponent(tz)}; path=/; max-age=31536000; samesite=lax`;
+
+		// Register the service worker (auto-updates in the background).
+		import('virtual:pwa-register').then(({ registerSW }) => registerSW({ immediate: true }));
 	});
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	{@html webManifestLink}
 </svelte:head>
 
 <div class="app">

@@ -56,11 +56,14 @@ Phased plan. Each phase is independently shippable/testable and ends with green 
 - **Verified (curl):** today shows logged sets + push focus; history lists Mon 1 Jun (legs) + Sat 6 Jun (push); detail renders past sets (incl. a deleted-exercise snapshot); empty day → 404. `check`/`lint`/`build` green; 43 tests pass.
 - _Remaining:_ Playwright e2e #7/#8.
 
-## Phase 6 — PWA & polish
+## Phase 6 — PWA & polish ✅ CORE DONE
 
-- `@vite-pwa/sveltekit`: manifest, icons, service worker (shell precache, network-first data).
-- Responsive pass, reduced-motion, loading/disabled states, error toasts.
-- **Done when:** installable on a phone over HTTPS; Lighthouse PWA checks pass.
+- `@vite-pwa/sveltekit` (registerType autoUpdate): manifest (standalone, theme/bg, scope `/`, start_url `/workout`), service worker precaching the app shell + assets. Disabled under Vitest.
+- Trainmate dumbbell icon: `static/icons/icon-source.svg` → 192/512/maskable/apple-touch PNGs via `scripts/gen-icons.mjs` (`npm run icons`, uses sharp).
+- Manifest `<link>` injected via `virtual:pwa-info`; SW registered in the layout (`virtual:pwa-register`); apple-touch-icon + apple-mobile-web-app meta in `app.html`.
+- Polish: Post button disabled + "Posting…" while in flight (complements idempotency); search/auth already have loading/disabled states.
+- **Verified:** build emits `manifest.webmanifest` + `sw.js` (+ workbox) with icons precached; dev serves `/manifest.webmanifest` (200) and injects the manifest link. `check`/`lint`/`build` green; 43 tests pass.
+- _Remaining:_ confirm install + Lighthouse PWA on the real HTTPS deploy (Phase 7); optional offline fallback page; reduced-motion sweep.
 
 ## Phase 7 — Deployment & hardening (Raspberry Pi)
 

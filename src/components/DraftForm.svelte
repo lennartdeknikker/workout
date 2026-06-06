@@ -30,6 +30,7 @@
 	let distance = $state<number | undefined>(undefined);
 	let resistance = $state<number | undefined>(undefined);
 	let postError = $state<string | null>(null);
+	let posting = $state(false);
 
 	// Seed the inputs from the exercise's range mins whenever the active exercise changes.
 	$effect(() => {
@@ -70,8 +71,9 @@
 	}
 
 	async function post() {
-		if (!draft || !exercise) return;
+		if (!draft || !exercise || posting) return;
 		postError = null;
+		posting = true;
 		try {
 			const res = await fetch('/api/workout', {
 				method: 'POST',
@@ -94,6 +96,8 @@
 			}
 		} catch {
 			postError = 'Could not save. Check your connection and try again.';
+		} finally {
+			posting = false;
 		}
 	}
 </script>
@@ -214,7 +218,9 @@
 			{#if postError}<p class="error">{postError}</p>{/if}
 			<nav>
 				<button type="button" onclick={() => workoutDrafts.setStep(draft.id, 2)}>Back</button>
-				<button type="button" class="post" onclick={post}>Post</button>
+				<button type="button" class="post" disabled={posting} onclick={post}>
+					{posting ? 'Posting…' : 'Post'}
+				</button>
 			</nav>
 		</section>
 	{/if}
