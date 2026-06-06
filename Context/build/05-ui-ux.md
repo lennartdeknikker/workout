@@ -33,12 +33,14 @@ The look is **clean, minimal, monochrome** — preserve the current Trainmate ae
 ## 3. Screen-by-screen
 
 ### Workout (today) — `/workout`
+
 - **Zero state:** centered illustration/empty message ("No exercises logged today") + a large
   **"Start an exercise"** primary button.
 - **Populated:** date + focus-area chip at top; a card per exercise logged today with its sets
   summarised as badges; persistent **"Start an exercise"** button at the bottom.
 
 ### Logging form — `/workout/new` (the centrepiece)
+
 Implemented as an overlay/page hosting **1–3 draft tabs**.
 
 - **Tab bar (sub-nav):** one chip per open draft + a **"+"** button (disabled at 3 tabs). Each tab
@@ -59,9 +61,11 @@ Implemented as an overlay/page hosting **1–3 draft tabs**.
 - **Draft persistence:** drafts live in `workoutDrafts` store, mirrored to `localStorage`; restored on load.
 
 ### Exercises (library) — `/exercises`
+
 - List grouped by routine; each row: GIF thumb + name + measurementType chip. Tap → edit. FAB/"+" → add.
 
 ### Add / edit exercise — `/exercises/new`, `/exercises/[id]/edit`
+
 - **Search card:** text field; live results (debounced) as tappable rows (GIF + name). Picking one
   fills the snapshot + name. A "can't find it? add custom" affordance lets you skip search.
 - **Details card(s):** measurementType selector + routine selector, then **conditional range inputs**
@@ -69,11 +73,13 @@ Implemented as an overlay/page hosting **1–3 draft tabs**.
 - Save (green ✓) / for edit also a Delete (with confirm). Inline validation errors under fields.
 
 ### History — `/history`, `/history/[date]`
+
 - **List:** vertical list of day buttons; each label = day (e.g. "Tue 3 Jun") + focus area ("Push").
   Most recent first.
 - **Detail:** the day's exercises in performed order, each with its sets as badges/rows.
 
 ### Auth — `/login`, `/signup`
+
 - Minimal centered card matching the aesthetic. Email + password (+ confirm on signup). Inline errors.
 
 ## 4. Components inventory
@@ -98,7 +104,7 @@ Implemented as an overlay/page hosting **1–3 draft tabs**.
   (the monochrome palette already passes).
 - Respect `prefers-reduced-motion` for the timer/tab transitions.
 - Loading/disabled states for async (search, post) — never let a double-tap double-post (idempotency
-  + disabled-while-pending).
+  - disabled-while-pending).
 
 ## 6. Responsive
 

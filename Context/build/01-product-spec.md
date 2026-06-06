@@ -3,13 +3,13 @@
 ## 1. Vision & goals
 
 Trainmate lets a lifter **log every set with minimal friction** during a workout and **review
-progress over time**. It optimises for *speed of logging mid-session* (big touch targets,
-sliders, few taps) and *clean, honest data* (a flat per-set log that's trivial to analyse later).
+progress over time**. It optimises for _speed of logging mid-session_ (big touch targets,
+sliders, few taps) and _clean, honest data_ (a flat per-set log that's trivial to analyse later).
 
 **Primary goal:** never lose a set; logging a set should take seconds.
 **Secondary goal:** the log is structured so future analytics/visualisations are easy to add.
 
-**Non-goals (v1):** social features, workout *planning*/programming, in-app charts/analytics,
+**Non-goals (v1):** social features, workout _planning_/programming, in-app charts/analytics,
 nutrition, wearables, native apps, offline writes (online required to post). These are explicitly
 out of scope but the data model must not preclude them.
 
@@ -36,7 +36,7 @@ out of scope but the data model must not preclude them.
 
 Top-level navigation (mobile bottom-nav or top tabs — see `05-ui-ux.md`) with these destinations:
 
-- **Workout** (`/workout`) — *default landing after login.* Today's overview. Zero state when
+- **Workout** (`/workout`) — _default landing after login._ Today's overview. Zero state when
   nothing logged yet. Always shows a prominent **"Start an exercise"** button.
 - **History** (`/history`) — "Previous workouts". List of past days.
 - **Exercises** (`/exercises`) — manage the personal exercise library.
@@ -47,6 +47,7 @@ The brand is **"Trainmate"** with the dumbbell mark (reuse from current header).
 ## 5. Detailed flows & screen behaviour
 
 ### 5.1 Auth
+
 - **Sign up:** email, password, password confirm. Validate email format, password ≥ 8 chars.
   On success → logged in → `/workout`.
 - **Sign in:** email + password. On success → `/workout`. On failure → inline error, no field-specific leakage ("Invalid email or password").
@@ -55,6 +56,7 @@ The brand is **"Trainmate"** with the dumbbell mark (reuse from current header).
 - **Sign out:** clears session → `/login`.
 
 ### 5.2 Exercise library — `/exercises`
+
 - **List:** the user's exercises, grouped by routine (push/pull/legs/cardio/core). Each item shows
   name, a small GIF thumbnail (hotlinked), routine tag, and measurement type. Tap → edit.
 - **Add (`/exercises/new`):**
@@ -63,7 +65,7 @@ The brand is **"Trainmate"** with the dumbbell mark (reuse from current header).
   2. User **picks one** result → we fetch full detail (`/api/exercise-search/[id]`) and pre-fill the
      metadata snapshot (name, gifUrl, targetMuscles, bodyParts, equipments, secondaryMuscles, instructions).
   3. User may **also add a custom exercise** without picking a result (the ExerciseDB snapshot is then null/empty; name is required and entered manually).
-  4. User fills the **personal properties** in the *same form* (this mirrors the old `ExerciseForm` inputs — see `05-ui-ux.md`):
+  4. User fills the **personal properties** in the _same form_ (this mirrors the old `ExerciseForm` inputs — see `05-ui-ux.md`):
      - **measurementType** (required): strength | cardio | bodyweight.
      - **routine** (required): push | pull | legs | cardio | core.
      - Range fields, shown conditionally by measurementType:
@@ -98,7 +100,7 @@ or an overlay — see `05-ui-ux.md`). The form supports **up to 3 concurrent exe
     to the exercise's range min and are bounded by min/max where defined.
   - **bodyweight:** Reps (input + slider), optional Added weight (input). Commit adds `{reps, weight?}`.
   - **cardio:** Duration (input + slider, mm:ss or seconds), optional Distance, optional Resistance.
-    Commit adds `{durationSeconds, distance?, resistance?}`. *Typically one entry, but multiple allowed.*
+    Commit adds `{durationSeconds, distance?, resistance?}`. _Typically one entry, but multiple allowed._
   - Committed sets render as **removable badges** (e.g. `43.25kg | 12x`, or `5:00 | 1.2km` for cardio),
     each with an ✕ to remove. (Exactly like the current "Sets" card.)
   - Continue → Screen 3 (enabled once ≥ 1 set committed).
@@ -112,6 +114,7 @@ or an overlay — see `05-ui-ux.md`). The form supports **up to 3 concurrent exe
   - After posting, behaviour per the multi-tab rules below.
 
 **Multi-tab rules:**
+
 - A **sub-nav with a "+" button** lets the user open another draft tab (max 3 total). Each tab is an
   independent draft at its own screen/step. The user can switch between tabs freely.
 - When a draft is **posted**, its tab gets a **green checkmark** and is locked.
@@ -124,19 +127,22 @@ or an overlay — see `05-ui-ux.md`). The form supports **up to 3 concurrent exe
 on successful post or explicit discard.
 
 ### 5.4 Workout (today) overview — `/workout`
+
 - **Zero state** (nothing logged today): a friendly empty state + big **"Start an exercise"** button.
 - **Populated:** today's date + focus area, then a list/cards of each exercise logged today with its
   sets summarised (e.g. "Bench Press — 120kg×11, 117.5kg×10, …"). A **"Start an exercise"** button
   remains available to add more.
 
 ### 5.5 History / Previous workouts — `/history`
+
 - **List:** one button/card **per past day that has logged sets** (most recent first). Label = the
   **day** (e.g. "Tue 3 Jun") + **focus area** (the routine with the highest exercise count that day,
-  e.g. "Push"). Tie-break: if two routines tie, pick the one with the most *sets*, then alphabetical.
+  e.g. "Push"). Tie-break: if two routines tie, pick the one with the most _sets_, then alphabetical.
 - **Day detail (`/history/[date]`):** the exercises done that day, each with sets (weights/reps or
   duration/distance), in performed order.
 
 ### 5.6 Rest timer (port existing)
+
 - Always reachable: a slide-out control (the current `TimerBar` pattern) with **1 / 2 / 3 minute**
   buttons and a **circular progress** fill as it counts down. Behaviour and look match the current app.
 - **Enhancement (optional, low priority):** when a strength/bodyweight exercise is active in the form,

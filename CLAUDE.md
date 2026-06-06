@@ -27,7 +27,7 @@ The complete, decision-locked spec lives in **`Context/build/`**. Read it before
 ## Tech stack (locked)
 
 SvelteKit + Svelte 5 (runes) · TypeScript (strict) · PostgreSQL · Drizzle ORM + drizzle-kit ·
-better-auth (email+password, multi-user) · `adapter-node` · Zod · Vitest + @testing-library/svelte ·
+better-auth (email+password, multi-user) · `adapter-node` · Zod · Vitest + vitest-browser-svelte ·
 Playwright · Docker (ARM64) · PWA (`@vite-pwa/sveltekit`) · Cloudflare Tunnel/Caddy for HTTPS.
 
 ## Non-negotiable rules

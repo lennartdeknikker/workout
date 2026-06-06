@@ -6,16 +6,16 @@ build the app end-to-end from these documents **without further product clarific
 
 Read the documents in order:
 
-| # | Document | What it covers |
-|---|----------|----------------|
-| 00 | `00-overview.md` (this file) | Summary, locked decisions, glossary |
-| 01 | `01-product-spec.md` | Vision, users, feature specs, user flows, screen-by-screen behaviour, acceptance criteria |
-| 02 | `02-architecture.md` | Tech stack, repo structure, deployment (Docker + Raspberry Pi), networking/HTTPS, PWA, security |
-| 03 | `03-data-model.md` | Postgres schema, Drizzle definitions, TypeScript types, validation rules |
-| 04 | `04-api-and-routes.md` | SvelteKit routes, server endpoints, ExerciseDB proxy, form actions |
-| 05 | `05-ui-ux.md` | Design system, components, the progressive-disclosure multi-tab form, navigation, timer |
-| 06 | `06-testing.md` | TDD workflow, unit/component/e2e tooling, concrete test inventory |
-| 07 | `07-roadmap.md` | Phased milestones and task breakdown |
+| #   | Document                     | What it covers                                                                                  |
+| --- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
+| 00  | `00-overview.md` (this file) | Summary, locked decisions, glossary                                                             |
+| 01  | `01-product-spec.md`         | Vision, users, feature specs, user flows, screen-by-screen behaviour, acceptance criteria       |
+| 02  | `02-architecture.md`         | Tech stack, repo structure, deployment (Docker + Raspberry Pi), networking/HTTPS, PWA, security |
+| 03  | `03-data-model.md`           | Postgres schema, Drizzle definitions, TypeScript types, validation rules                        |
+| 04  | `04-api-and-routes.md`       | SvelteKit routes, server endpoints, ExerciseDB proxy, form actions                              |
+| 05  | `05-ui-ux.md`                | Design system, components, the progressive-disclosure multi-tab form, navigation, timer         |
+| 06  | `06-testing.md`              | TDD workflow, unit/component/e2e tooling, concrete test inventory                               |
+| 07  | `07-roadmap.md`              | Phased milestones and task breakdown                                                            |
 
 The root `CLAUDE.md` holds engineering conventions and points back here.
 
@@ -40,6 +40,7 @@ extend. See `05-ui-ux.md` for which parts of the old UI to preserve.
 These were decided with the product owner and are **not open for re-litigation** during the build.
 
 ### Product
+
 - **Multi-user** with real accounts. Each user has their **own** exercise library and workout log; data is strictly per-user.
 - **Auth:** email + password only, via **better-auth**. No Google/OAuth, no magic links (for v1).
 - **Three exercise measurement types**, set explicitly per exercise (`measurementType`):
@@ -52,6 +53,7 @@ These were decided with the product owner and are **not open for re-litigation**
 - **Cheat-sheet PDFs** stay in `static/documents/` but are **removed from the UI** and **excluded from search-engine indexing**.
 
 ### Technical
+
 - **SvelteKit + Svelte 5 + TypeScript** (TS everywhere it's possible).
 - **PostgreSQL** as the only datastore.
 - **Drizzle ORM** + `drizzle-kit` migrations.
@@ -60,7 +62,7 @@ These were decided with the product owner and are **not open for re-litigation**
 - Runs **on a Raspberry Pi in Docker** (`docker compose`: app + Postgres). ARM64.
 - **Internet-exposed + installable PWA.** Reached via a public hostname over **HTTPS**;
   recommended path is a **Cloudflare Tunnel** (no port-forwarding) — see `02-architecture.md`.
-- **Test-driven development.** Unit/component tests with **Vitest** + `@testing-library/svelte`;
+- **Test-driven development.** Unit/component tests with **Vitest** + `vitest-browser-svelte`;
   end-to-end with **Playwright**. Tests are written before/with the implementation.
 
 ---

@@ -2,23 +2,23 @@
 
 ## 1. Stack summary
 
-| Concern | Choice | Notes |
-|---|---|---|
-| Framework | SvelteKit (Svelte 5 runes) | SSR + form actions + endpoints |
-| Language | TypeScript (strict) | TS everywhere feasible |
-| Adapter | `@sveltejs/adapter-node` | Long-lived Node server in Docker (replaces adapter-netlify) |
-| DB | PostgreSQL 16 | Single datastore |
-| ORM | Drizzle ORM + drizzle-kit | Typed schema + SQL migrations |
-| Auth | better-auth (Drizzle adapter) | Email+password, session cookies |
-| Validation | Zod | Shared client/server schemas |
-| Styling | Scoped Svelte CSS + design tokens | No heavy UI framework (keep it light for the Pi) |
-| Unit/component tests | Vitest + @testing-library/svelte | |
-| E2E tests | Playwright | Against a real Postgres test DB |
-| Runtime | Node 20 LTS (ARM64) | Matches Raspberry Pi |
-| Package manager | npm | Lockfile already present |
-| Container | Docker + docker compose | app + postgres |
-| Ingress/TLS | Cloudflare Tunnel (recommended) or Caddy | Public HTTPS without port-forwarding |
-| PWA | `@vite-pwa/sveltekit` | Manifest + service worker |
+| Concern              | Choice                                   | Notes                                                       |
+| -------------------- | ---------------------------------------- | ----------------------------------------------------------- |
+| Framework            | SvelteKit (Svelte 5 runes)               | SSR + form actions + endpoints                              |
+| Language             | TypeScript (strict)                      | TS everywhere feasible                                      |
+| Adapter              | `@sveltejs/adapter-node`                 | Long-lived Node server in Docker (replaces adapter-netlify) |
+| DB                   | PostgreSQL 16                            | Single datastore                                            |
+| ORM                  | Drizzle ORM + drizzle-kit                | Typed schema + SQL migrations                               |
+| Auth                 | better-auth (Drizzle adapter)            | Email+password, session cookies                             |
+| Validation           | Zod                                      | Shared client/server schemas                                |
+| Styling              | Scoped Svelte CSS + design tokens        | No heavy UI framework (keep it light for the Pi)            |
+| Unit/component tests | Vitest + vitest-browser-svelte           |                                                             |
+| E2E tests            | Playwright                               | Against a real Postgres test DB                             |
+| Runtime              | Node 20 LTS (ARM64)                      | Matches Raspberry Pi                                        |
+| Package manager      | npm                                      | Lockfile already present                                    |
+| Container            | Docker + docker compose                  | app + postgres                                              |
+| Ingress/TLS          | Cloudflare Tunnel (recommended) or Caddy | Public HTTPS without port-forwarding                        |
+| PWA                  | `@vite-pwa/sveltekit`                    | Manifest + service worker                                   |
 
 ## 2. Repository structure (target)
 
@@ -132,22 +132,26 @@ upstream, lets us set headers, and lets us add caching/rate-limiting.
 ## 6. Deployment — Raspberry Pi + Docker
 
 ### docker compose (app + db)
+
 - **db:** `postgres:16` (multi-arch, runs on arm64). Named volume for persistence. Healthcheck.
 - **app:** built from `docker/Dockerfile`. Depends on db (healthy). Runs migrations on boot, then
   starts the Node server (`node build`). Exposes port 3000 internally.
 - Restart policy `unless-stopped`. `.env` provides secrets.
 
 ### Dockerfile (multi-stage, ARM64-friendly)
+
 1. `deps` — `npm ci`.
 2. `build` — `npm run build` (adapter-node → `build/`), prune to prod deps.
 3. `runtime` — `node:20-bookworm-slim` (or `-alpine` if native modules behave), copy `build/` +
    prod `node_modules`, `CMD ["node","build"]`. Run as non-root.
 
 ### Migrations on boot
+
 `src/lib/server/db/migrate.ts` runs `drizzle-kit` migrations (or `migrate()` from drizzle) before
 the server accepts traffic. Idempotent.
 
 ### Backups
+
 Document a `pg_dump` cron on the Pi writing to an external/USB volume; restore instructions in README.
 
 ## 7. Networking, HTTPS & public exposure
@@ -155,6 +159,7 @@ Document a `pg_dump` cron on the Pi writing to an external/USB volume; restore i
 The app is internet-exposed and installable, but the Pi is typically behind home NAT.
 
 **Recommended: Cloudflare Tunnel.**
+
 - Run `cloudflared` (as a 3rd compose service or host daemon) bound to the app's internal port.
 - Cloudflare provides a public hostname with automatic TLS; **no port-forwarding, no exposed home IP.**
 - Set `BETTER_AUTH_URL` / `PUBLIC_APP_URL` to the public hostname.
@@ -163,6 +168,7 @@ The app is internet-exposed and installable, but the Pi is typically behind home
 443). `Caddyfile` reverse-proxies `:443` → `app:3000` with automatic Let's Encrypt TLS.
 
 **Security baseline (required because it's public):**
+
 - HTTPS only; `Secure`, `HttpOnly`, `SameSite=Lax` session cookies (better-auth defaults).
 - Set security headers (CSP allowing `static.exercisedb.dev` images, HSTS, `X-Content-Type-Options`,
   frame-ancestors none) — via SvelteKit `handle` hook or Caddy.
@@ -190,5 +196,5 @@ The app is internet-exposed and installable, but the Pi is typically behind home
   `$lib`, add `$server` → `src/lib/server` if desired).
 - Remove `firebase`, `@sveltejs/adapter-netlify`, `netlify.toml`.
 - Add: `drizzle-orm`, `drizzle-kit`, `postgres`/`pg`, `better-auth`, `zod`, `@vite-pwa/sveltekit`,
-  `vitest`, `@testing-library/svelte`, `@playwright/test`.
+  `vitest`, `vitest-browser-svelte`, `@playwright/test`.
 - Keep Rubik font + the minimal black/white aesthetic.

@@ -1,38 +1,41 @@
-# create-svelte
+# Trainmate
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+Mobile-first, self-hosted **workout-tracking PWA**. Log every set with minimal friction and review
+your progress over time. Built to run on a Raspberry Pi (Docker + Postgres), exposed over HTTPS, and
+installable to your phone's home screen.
 
-## Creating a project
+> **Status:** rebuilding from scratch on the `rebuild` branch. The full, decision-locked spec lives
+> in [`Context/build/`](Context/build/) — read [`CLAUDE.md`](CLAUDE.md) and
+> [`Context/build/00-overview.md`](Context/build/00-overview.md) first.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Stack
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+SvelteKit + Svelte 5 (runes) · TypeScript · PostgreSQL · Drizzle ORM · better-auth (email+password) ·
+`adapter-node` · Vitest + `vitest-browser-svelte` · Playwright · Docker.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Develop
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+npm install
+npm run dev            # http://localhost:5173
 ```
 
-## Building
+## Scripts
 
-To create a production version of your app:
+| Command             | What it does                                                                    |
+| ------------------- | ------------------------------------------------------------------------------- |
+| `npm run dev`       | Dev server                                                                      |
+| `npm run build`     | Production build (adapter-node → `build/`)                                       |
+| `npm run preview`   | Preview the production build                                                    |
+| `npm run check`     | `svelte-check` / type-check                                                     |
+| `npm run lint`      | Prettier check + ESLint                                                         |
+| `npm run format`    | Prettier write                                                                  |
+| `npm run test:unit` | Vitest (unit + component, requires Chromium: `npx playwright install chromium`) |
+| `npm run test:e2e`  | Playwright end-to-end                                                           |
+| `npm run test`      | Unit + e2e                                                                      |
 
-```bash
-npm run build
-```
+## Deployment
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+Runs as a Node server in Docker alongside Postgres on a Raspberry Pi, reached over HTTPS via a
+Cloudflare Tunnel (recommended) or a Caddy reverse proxy. See
+[`Context/build/02-architecture.md`](Context/build/02-architecture.md).

@@ -1,0 +1,3 @@
+# Trainmate is a private, self-hosted app — exclude from all indexing.
+User-agent: *
+Disallow: /

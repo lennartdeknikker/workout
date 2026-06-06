@@ -6,13 +6,13 @@ data model and pure `src/lib/domain` functions are designed to make this cheap.
 
 ## 1. Tooling
 
-| Layer | Tool | Scope |
-|---|---|---|
-| Unit | **Vitest** | Pure domain logic, Zod schemas, stores, ExerciseDB mapping |
-| Component | **Vitest + @testing-library/svelte** | Individual Svelte components (RangeInput, SetBadge, DraftForm steps, ExerciseSearch) |
-| E2E | **Playwright** | Full user journeys against a running app + real Postgres |
-| Lint/format | ESLint + Prettier (already configured) | CI gate |
-| Types | `svelte-check` / `tsc` | CI gate |
+| Layer       | Tool                                                                             | Scope                                                                                |
+| ----------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Unit        | **Vitest**                                                                       | Pure domain logic, Zod schemas, stores, ExerciseDB mapping                           |
+| Component   | **Vitest browser mode + `vitest-browser-svelte`** (real Chromium via Playwright) | Individual Svelte components (RangeInput, SetBadge, DraftForm steps, ExerciseSearch) |
+| E2E         | **Playwright**                                                                   | Full user journeys against a running app + real Postgres                             |
+| Lint/format | ESLint + Prettier (already configured)                                           | CI gate                                                                              |
+| Types       | `svelte-check` / `tsc`                                                           | CI gate                                                                              |
 
 Add npm scripts: `test` (vitest run), `test:watch`, `test:e2e` (playwright), `test:all`, plus keep
 `check`, `lint`.
@@ -40,7 +40,10 @@ Pull pure logic into `src/lib/domain` so it can be tested without SvelteKit/DB.
 - **`groupSetsByExercise`**: preserves performed order; groups correctly; handles deleted-exercise (null id) rows using snapshot name.
 - **`workoutDrafts` store**: open/close tab (max 3), commit/remove set, mark posted, localStorage round-trip, auto-close when all posted.
 
-## 4. Component tests (@testing-library/svelte)
+## 4. Component tests (`vitest-browser-svelte`, browser mode)
+
+Component specs are named `*.svelte.spec.ts` and run in the Vitest **client** project (real Chromium).
+Use `render()` from `vitest-browser-svelte` and the `page`/locator API for queries/interaction.
 
 - **RangeInput**: number↔slider sync; respects min/max/step; emits value.
 - **SetBadge**: renders label; ✕ fires remove.
