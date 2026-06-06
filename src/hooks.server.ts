@@ -17,10 +17,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.session = session?.session ?? null;
 
 	const { pathname } = event.url;
-	const isAuthApi = pathname.startsWith('/api/auth');
+	// API routes enforce auth themselves (returning 401) rather than redirecting.
+	const isApi = pathname.startsWith('/api');
 
-	// Guard: unauthenticated users may only reach the better-auth API and public pages.
-	if (!isAuthApi && !isPublic(pathname) && !event.locals.user) {
+	// Guard: unauthenticated users may only reach API routes and public pages.
+	if (!isApi && !isPublic(pathname) && !event.locals.user) {
 		const target = pathname + event.url.search;
 		redirect(303, `/login?redirect=${encodeURIComponent(target)}`);
 	}

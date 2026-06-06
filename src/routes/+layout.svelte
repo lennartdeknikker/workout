@@ -1,11 +1,47 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
+	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import type { LayoutData } from './$types';
 
-	let { children } = $props();
+	let { children, data }: { data: LayoutData; children: import('svelte').Snippet } = $props();
+
+	const showNav = $derived(!!data.user && !['/login', '/signup'].includes(page.url.pathname));
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-{@render children()}
+<div class="app">
+	{#if showNav}
+		<nav>
+			<strong>Trainmate</strong>
+			<a href={resolve('/workout')}>Workout</a>
+			<a href={resolve('/exercises')}>Exercises</a>
+		</nav>
+	{/if}
+
+	<main>
+		{@render children()}
+	</main>
+</div>
+
+<style>
+	.app {
+		max-width: 40rem;
+		margin: 0 auto;
+		padding: 1rem;
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding-bottom: 1rem;
+		margin-bottom: 1rem;
+		border-bottom: 1px solid #000;
+	}
+	nav strong {
+		margin-right: auto;
+	}
+</style>

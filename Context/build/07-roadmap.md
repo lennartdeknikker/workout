@@ -27,13 +27,15 @@ Phased plan. Each phase is independently shippable/testable and ends with green 
   303→`/login` without, sign-in 200, wrong password 401, user row persisted.
 - _Remaining:_ `/account` page; convert e2e #1 into a Playwright spec; password-strength UX polish.
 
-## Phase 3 — Exercise library + ExerciseDB proxy
+## Phase 3 — Exercise library + ExerciseDB proxy ✅ DONE
 
-- `src/lib/server/exercisedb.ts` (User-Agent, `search=`, timeout, mapping incl. `Step:` strip) + unit tests.
-- `/api/exercise-search` and `/api/exercise-search/[id]` endpoints (auth-guarded).
-- `/exercises` list, `/exercises/new` (search + create, custom path), `/exercises/[id]/edit` (update/delete).
-- Zod `exerciseSchema`; conditional range UI by measurementType; `ExerciseSearch`, `RangeInput`, `ExerciseForm`.
-- **Done when:** e2e #2 & #3 pass (add from search, add custom, add cardio); CRUD unit/component tests green.
+- `src/lib/server/exercisedb.ts` (User-Agent, `search=`, 5s timeout) + pure `mapExerciseDbDetail`/`stripStepPrefix` in `$lib/domain` (unit-tested).
+- `/api/exercise-search` and `/api/exercise-search/[id]` endpoints (401 when unauthenticated).
+- `/exercises` list (grouped by routine), `/exercises/new` (search + create, custom path), `/exercises/[id]/edit` (update/delete); nav in layout.
+- Zod `exerciseInputSchema` (coerce + min≤max, unit-tested); `ExerciseForm` (conditional ranges by measurementType), `ExerciseSearch` (debounced typeahead), `RangeInput`.
+- Exercise repository (Kysely CRUD, user-scoped); shared `parseExerciseForm` helper.
+- **Verified (curl smoke):** search 401 without auth / results with auth, short-query empty, detail 200, create persists (strength + cardio), no-JS POST → 303, validation failure → 400 with message. `check`/`lint`/`build` green; 16 unit/component tests pass.
+- _Remaining:_ Playwright e2e #2/#3; ExerciseSearch + ExerciseForm component tests; CSRF/rate-limit polish.
 
 ## Phase 4 — Workout logging (the core)
 
