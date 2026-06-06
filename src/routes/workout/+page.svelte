@@ -2,6 +2,8 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { authClient } from '$lib/auth-client';
+	import ExerciseGroupList from '$components/ExerciseGroupList.svelte';
+	import { formatDayLabel } from '$lib/domain/history';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -14,21 +16,53 @@
 
 <svelte:head><title>Trainmate · Workout</title></svelte:head>
 
-<main>
-	<h1>Workout</h1>
-	<p>Today's overview lands here next (Phase 5). For now, start logging:</p>
+<header>
+	<h1>Today</h1>
+	{#if data.focusArea}<span class="focus">{data.focusArea}</span>{/if}
+</header>
+<p class="date">{formatDayLabel(data.today)}</p>
+
+{#if data.groups.length === 0}
+	<div class="zero">
+		<p>No exercises logged today.</p>
+		<a class="start" href={resolve('/workout/new')}>Start an exercise</a>
+	</div>
+{:else}
+	<ExerciseGroupList groups={data.groups} />
 	<a class="start" href={resolve('/workout/new')}>Start an exercise</a>
-	<p class="signed-in">
-		Signed in as {data.user?.email} · <button onclick={signOut}>Sign out</button>
-	</p>
-</main>
+{/if}
+
+<p class="signed-in">
+	Signed in as {data.user?.email} · <button onclick={signOut}>Sign out</button>
+</p>
 
 <style>
-	main {
+	header {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+	h1 {
+		margin: 0;
+	}
+	.focus {
+		text-transform: capitalize;
+		background: #000;
+		color: #fff;
+		border-radius: 8px;
+		padding: 0.15rem 0.5rem;
+		font-size: 0.9rem;
+	}
+	.date {
+		color: #555;
+		margin: 0.25rem 0 1rem;
+	}
+	.zero {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
 		align-items: flex-start;
+		padding: 2rem 0;
 	}
 	.start {
 		display: inline-block;
@@ -38,10 +72,12 @@
 		border-radius: 12px;
 		text-decoration: none;
 		font-weight: 600;
+		margin-top: 1.5rem;
 	}
 	.signed-in {
 		font-size: 0.9rem;
 		color: #555;
+		margin-top: 2rem;
 	}
 	.signed-in button {
 		background: none;

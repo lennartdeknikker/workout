@@ -3,11 +3,18 @@
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import RestTimer from '$components/RestTimer.svelte';
+	import { onMount } from 'svelte';
 	import type { LayoutData } from './$types';
 
 	let { children, data }: { data: LayoutData; children: import('svelte').Snippet } = $props();
 
 	const showNav = $derived(!!data.user && !['/login', '/signup'].includes(page.url.pathname));
+
+	// Let the server compute "today" in the user's zone for the workout/history views.
+	onMount(() => {
+		const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		document.cookie = `tz=${encodeURIComponent(tz)}; path=/; max-age=31536000; samesite=lax`;
+	});
 </script>
 
 <svelte:head>
@@ -19,6 +26,7 @@
 		<nav>
 			<strong>Trainmate</strong>
 			<a href={resolve('/workout')}>Workout</a>
+			<a href={resolve('/history')}>History</a>
 			<a href={resolve('/exercises')}>Exercises</a>
 		</nav>
 	{/if}

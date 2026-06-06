@@ -3,6 +3,10 @@ import pg from 'pg';
 import { env } from '$env/dynamic/private';
 import type { AppDB } from './types';
 
+// Keep Postgres `date` (OID 1082) as a plain 'YYYY-MM-DD' string instead of a JS Date,
+// matching our types and avoiding timezone shifts when grouping by workout_date.
+pg.types.setTypeParser(1082, (value) => value);
+
 /**
  * Single shared Postgres connection pool.
  * better-auth wraps this same pool with its own Kysely instance (see $lib/server/auth),

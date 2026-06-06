@@ -46,11 +46,15 @@ Phased plan. Each phase is independently shippable/testable and ends with green 
 - **Verified (curl):** strength 3 sets → 3 rows (indexed, snapshotted); duplicate draftId → `duplicate:true` (no dupes); cardio duration+distance → 1 row; reps-on-cardio → 400. `check`/`lint`/`build` green; 34 unit/component tests pass.
 - _Remaining:_ Playwright e2e #4/#5/#6/#9; DraftForm/WorkoutTabs component tests; richer timer UI (Phase 6).
 
-## Phase 5 — Today overview & History
+## Phase 5 — Today overview & History ✅ DONE
 
-- `/workout` load (today's grouped sets, focus area, zero state).
-- `/history` list (days + focus labels) and `/history/[date]` detail; `computeFocusArea`, `groupSetsByExercise`.
-- **Done when:** e2e #7 & #8 pass (history listing/detail, delete keeps history); domain unit tests green.
+- Domain (+ tests): `computeFocusArea`, `summariseRoutines`, `groupSetsByExercise`, `formatLoggedSet`, `formatDayLabel`.
+- History repository: `getDaySets` + `listWorkoutDays` (SQL group-by aggregate, per-day focus area); row mapper.
+- `/workout` today overview (grouped sets + focus chip + zero state) with `tz` cookie so the server derives "today" in the user's zone; `ExerciseGroupList` shared component.
+- `/history` list (day label + focus + totals) and `/history/[date]` detail (404 for empty/invalid days); History added to nav.
+- Fix: `pg` now returns `date` as a `'YYYY-MM-DD'` string (type parser) — matches types, avoids tz shifts.
+- **Verified (curl):** today shows logged sets + push focus; history lists Mon 1 Jun (legs) + Sat 6 Jun (push); detail renders past sets (incl. a deleted-exercise snapshot); empty day → 404. `check`/`lint`/`build` green; 43 tests pass.
+- _Remaining:_ Playwright e2e #7/#8.
 
 ## Phase 6 — PWA & polish
 
