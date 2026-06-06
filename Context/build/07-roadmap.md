@@ -37,13 +37,14 @@ Phased plan. Each phase is independently shippable/testable and ends with green 
 - **Verified (curl smoke):** search 401 without auth / results with auth, short-query empty, detail 200, create persists (strength + cardio), no-JS POST → 303, validation failure → 400 with message. `check`/`lint`/`build` green; 16 unit/component tests pass.
 - _Remaining:_ Playwright e2e #2/#3; ExerciseSearch + ExerciseForm component tests; CSRF/rate-limit polish.
 
-## Phase 4 — Workout logging (the core)
+## Phase 4 — Workout logging (the core) ✅ CORE DONE
 
-- `workoutDrafts` store (tabs ≤3, commit/remove sets, posted state, localStorage) + unit tests.
-- `DraftForm` 3-step machine + `WorkoutTabs` (+ button, checkmarks, auto-close) + `SetBadge`.
-- `/workout/post` action with per-type validation, transactional insert, idempotency (draftId), snapshotting.
-- Port `Timer`/`TimerBar`.
-- **Done when:** e2e #4, #5, #6, #9 pass (log strength, multi-tab cardio, checkmarks, draft persistence).
+- `workoutDrafts` store (tabs ≤3, commit/remove sets, posted state, localStorage persist/hydrate) + unit tests.
+- Domain: `formatSetBadge`, `formatDuration`, `localWorkoutDate` + unit tests; per-type set schemas (`setSchemaFor`) + tests.
+- `DraftForm` 3-step machine + `WorkoutTabs` (+ button, checkmarks, auto-close) + `SetBadge`; `RestTimer` (1/2/3-min) in layout.
+- `/api/workout` POST (auth, per-type validation, server-derived `workout_date` from tz, transactional insert, snapshotting, in-memory idempotency by `draftId`); `setLog` repository.
+- **Verified (curl):** strength 3 sets → 3 rows (indexed, snapshotted); duplicate draftId → `duplicate:true` (no dupes); cardio duration+distance → 1 row; reps-on-cardio → 400. `check`/`lint`/`build` green; 34 unit/component tests pass.
+- _Remaining:_ Playwright e2e #4/#5/#6/#9; DraftForm/WorkoutTabs component tests; richer timer UI (Phase 6).
 
 ## Phase 5 — Today overview & History
 

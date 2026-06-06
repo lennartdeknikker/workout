@@ -2,6 +2,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
+	import RestTimer from '$components/RestTimer.svelte';
 	import type { LayoutData } from './$types';
 
 	let { children, data }: { data: LayoutData; children: import('svelte').Snippet } = $props();
@@ -25,6 +26,10 @@
 	<main>
 		{@render children()}
 	</main>
+
+	{#if showNav}
+		<RestTimer />
+	{/if}
 </div>
 
 <style>
