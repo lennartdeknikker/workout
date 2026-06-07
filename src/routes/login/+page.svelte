@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { authClient } from '$lib/auth-client';
@@ -19,6 +19,8 @@
 			error = 'Invalid email or password';
 			return;
 		}
+		// Refresh server-loaded layout data (user) before navigating.
+		await invalidateAll();
 		const redirectTo = page.url.searchParams.get('redirect');
 		// redirectTo is a same-origin pathname set by our own auth guard.
 		// eslint-disable-next-line svelte/no-navigation-without-resolve

@@ -11,7 +11,9 @@ export default defineConfig({
 			injectRegister: false,
 			// Don't run the PWA plugin during unit/component tests.
 			disable: !!process.env.VITEST,
-			devOptions: { enabled: true, type: 'module' },
+			// The service worker is built for production; the dev SW (generateSW with no
+			// client build to precache) errors, so keep it off in dev.
+			devOptions: { enabled: false },
 			manifest: {
 				name: 'Trainmate',
 				short_name: 'Trainmate',

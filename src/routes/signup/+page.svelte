@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { authClient } from '$lib/auth-client';
 
@@ -23,6 +23,7 @@
 			error = err.message ?? 'Could not create account';
 			return;
 		}
+		await invalidateAll();
 		await goto(resolve('/workout'));
 	}
 </script>
