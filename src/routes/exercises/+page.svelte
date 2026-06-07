@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { ROUTINES } from '$lib/schemas/exercise';
+	import { lazysrc } from '$lib/actions/lazysrc';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -30,7 +31,7 @@
 				{#each group.items as exercise (exercise.id)}
 					<li>
 						<a href={resolve('/exercises/[id]/edit', { id: exercise.id })}>
-							{#if exercise.gif_url}<img src={exercise.gif_url} alt="" loading="lazy" />{/if}
+							{#if exercise.gif_url}<img use:lazysrc={exercise.gif_url} alt="" />{/if}
 							<span class="name">{exercise.name}</span>
 							<span class="tag">{exercise.measurement_type}</span>
 						</a>

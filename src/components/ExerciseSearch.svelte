@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ExerciseDbSearchResult, ExerciseDbSnapshot } from '$lib/domain/exercisedb';
+	import { lazysrc } from '$lib/actions/lazysrc';
 
 	interface Props {
 		onselect: (snapshot: ExerciseDbSnapshot) => void;
@@ -75,7 +76,7 @@
 			{#each results as result (result.exerciseId)}
 				<li>
 					<button type="button" onclick={() => pick(result)}>
-						<img src={result.gifUrl} alt="" loading="lazy" />
+						<img use:lazysrc={result.gifUrl} alt="" />
 						<span>{result.name}</span>
 					</button>
 				</li>
