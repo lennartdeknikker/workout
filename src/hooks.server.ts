@@ -1,6 +1,7 @@
 import { building, dev } from '$app/environment';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import { env } from '$env/dynamic/private';
 import { svelteKitHandler } from 'better-auth/svelte-kit';
 import { auth } from '$lib/server/auth';
 import { rateLimit } from '$lib/server/rateLimit';
@@ -31,6 +32,9 @@ const securityHeaders: Handle = async ({ event, resolve }) => {
 
 /** Per-IP rate limiting for the sensitive endpoints (auth + the ExerciseDB proxy). */
 const rateLimiter: Handle = async ({ event, resolve }) => {
+	// Opt-out for e2e tests (all requests share one IP).
+	if (env.RATE_LIMIT_DISABLED === 'true') return resolve(event);
+
 	const { pathname } = event.url;
 	const isAuth = pathname.startsWith('/api/auth');
 	const isSearch = pathname.startsWith('/api/exercise-search');

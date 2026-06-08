@@ -3,6 +3,17 @@
 Phased plan. Each phase is independently shippable/testable and ends with green tests. TDD throughout
 (write tests with/before implementation). Earlier phases unblock later ones.
 
+## ✅ Test coverage (complete)
+
+- **Unit + component (Vitest):** 52 tests — domain (exercisedb mapping, ranges, set/badge formatting,
+  focus-area, grouping, schemas) + components (RangeInput, SetBadge, WorkoutTabs, ExerciseSearch, DraftForm).
+- **E2E (Playwright):** all 10 acceptance criteria (`06-testing.md §5`) pass against a production
+  `preview` build + an isolated `trainmate_test` Postgres (created/migrated in global-setup, truncated
+  per test). ExerciseDB is stubbed via route interception; auth via the API helper; rate-limiting
+  disabled in the test env. Run with `npm run test:e2e` (needs the dev Postgres up on :5544).
+- Note: Playwright's `selectOption` doesn't update a Svelte 5 `<select>` that drives a conditional
+  re-render (a real `change` event does), so tests pick via the `chooseSelect` helper. Not a user-facing bug.
+
 ## Phase 0 — Project reset & toolchain ✅ DONE
 
 - Removed Firebase, adapter-netlify, `netlify.toml`, static-JSON exercises, old session/auth.
