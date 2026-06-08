@@ -10,8 +10,9 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-trainmate}
       POSTGRES_DB: trainmate
     ports:
+      # Bound to loopback only (host-local access; not exposed to the LAN).
       # Host 5544 → container 5432 (5432 is often taken by other local Postgres instances).
-      - '5544:5432'
+      - '127.0.0.1:5544:5432'
     volumes:
       - trainmate_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -36,8 +37,45 @@ services:
       PUBLIC_APP_URL: ${PUBLIC_APP_URL:?set PUBLIC_APP_URL}
       EXERCISEDB_BASE_URL: ${EXERCISEDB_BASE_URL:-https://oss.exercisedb.dev/api/v1}
       PORT: '3000'
+      # adapter-node behind the reverse proxy / tunnel (see .env.example).
+      ORIGIN: ${ORIGIN:-${PUBLIC_APP_URL}}
+      PROTOCOL_HEADER: ${PROTOCOL_HEADER:-x-forwarded-proto}
+      HOST_HEADER: ${HOST_HEADER:-x-forwarded-host}
+      ADDRESS_HEADER: ${ADDRESS_HEADER:-cf-connecting-ip}
+    # Not published to the host in production — the tunnel/proxy reaches it over the compose network.
+    expose:
+      - '3000'
+
+  # Ingress option A (recommended): Cloudflare Tunnel. `docker compose --profile tunnel up -d`.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    profiles: ['tunnel']
+    # TUNNEL_TOKEN is required when using this profile (set it in .env).
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN:-}
+    depends_on:
+      - app
+
+  # Ingress option B: Caddy reverse proxy with automatic HTTPS. `docker compose --profile caddy up -d`.
+  # Requires a public domain pointing at this host and ports 80/443 forwarded.
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    profiles: ['caddy']
+    depends_on:
+      - app
     ports:
-      - '3000:3000'
+      - '80:80'
+      - '443:443'
+    environment:
+      # APP_DOMAIN is required when using this profile (set it in .env).
+      APP_DOMAIN: ${APP_DOMAIN:-}
+    volumes:
+      - ../Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
 
 volumes:
   trainmate_pgdata:
+  caddy_data:
+  caddy_config:

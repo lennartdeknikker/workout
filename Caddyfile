@@ -1,0 +1,7 @@
+# Caddy reverse proxy with automatic HTTPS (Let's Encrypt).
+# Used by the `caddy` compose profile. Requires APP_DOMAIN to resolve to this host
+# and ports 80/443 to be reachable. (If you use Cloudflare Tunnel instead, you don't need this.)
+{$APP_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy app:3000
+}

@@ -11,6 +11,25 @@ const config = {
 		alias: {
 			$components: 'src/components',
 			$server: 'src/lib/server'
+		},
+		// Content Security Policy. `auto` adds a nonce to SvelteKit's inline bootstrap script.
+		csp: {
+			mode: 'auto',
+			directives: {
+				'default-src': ['self'],
+				'script-src': ['self'],
+				// Scoped component styles are external in prod; inline style attributes need unsafe-inline.
+				'style-src': ['self', 'unsafe-inline'],
+				// ExerciseDB GIFs are hotlinked; data: covers the inline SVG favicon.
+				'img-src': ['self', 'data:', 'https://static.exercisedb.dev'],
+				'font-src': ['self', 'data:'],
+				'connect-src': ['self'],
+				'manifest-src': ['self'],
+				'worker-src': ['self'],
+				'object-src': ['none'],
+				'base-uri': ['self'],
+				'frame-ancestors': ['none']
+			}
 		}
 	}
 };

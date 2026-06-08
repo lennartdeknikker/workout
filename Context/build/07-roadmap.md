@@ -65,13 +65,20 @@ Phased plan. Each phase is independently shippable/testable and ends with green 
 - **Verified:** build emits `manifest.webmanifest` + `sw.js` (+ workbox) with icons precached; dev serves `/manifest.webmanifest` (200) and injects the manifest link. `check`/`lint`/`build` green; 43 tests pass.
 - _Remaining:_ confirm install + Lighthouse PWA on the real HTTPS deploy (Phase 7); optional offline fallback page; reduced-motion sweep.
 
-## Phase 7 — Deployment & hardening (Raspberry Pi)
+## Phase 7 — Deployment & hardening (Raspberry Pi) ✅ APP-SIDE DONE
 
-- Cloudflare Tunnel (recommended) or Caddy TLS; set `BETTER_AUTH_URL`/`PUBLIC_APP_URL`.
-- Security headers/CSP (allow `static.exercisedb.dev` images), rate-limit auth + proxy.
-- `pg_dump` backup cron + restore doc; README run/deploy instructions.
-- **Done when:** reachable at the public HTTPS hostname from a phone, installable, multi-user isolation
-  verified (e2e #10), backups produce a restorable dump.
+- **Security headers** (HSTS in prod, `X-Frame-Options: DENY`, `X-Content-Type-Options`, Referrer-Policy,
+  Permissions-Policy) + **CSP** (`svelte.config.js`, auto-nonce; allows `static.exercisedb.dev` imgs,
+  `worker-src self`) via `hooks.server.ts` (`sequence`).
+- **Rate limiting** (in-memory, per-IP): 30/min auth, 60/min ExerciseDB proxy → 429.
+- **adapter-node behind proxy**: `ORIGIN` + `PROTOCOL/HOST/ADDRESS_HEADER` env (compose + `.env.example`).
+- **Ingress**: compose `tunnel` profile (`cloudflared` + `TUNNEL_TOKEN`) and `caddy` profile (+ `Caddyfile`);
+  app port no longer host-published in prod; Postgres bound to `127.0.0.1`.
+- **Backups**: `scripts/backup.sh` (gzipped `pg_dump`, keep 14) + cron + restore in `DEPLOYMENT.md`.
+- **Verified locally:** `node build` emits all headers + CSP; full flow drives under CSP with **0 violations**;
+  hammering the proxy returns 429s; all compose profiles `config`-validate. `check`/`lint`/`build` green; 43 tests.
+- _Runs on your hardware (not verifiable here):_ create the Cloudflare Tunnel / point the domain, launch the
+  chosen profile, confirm phone install + Lighthouse PWA, schedule the backup cron. See `DEPLOYMENT.md`.
 
 ## Suggested order of first tests to write (TDD seeds)
 
