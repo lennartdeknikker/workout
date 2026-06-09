@@ -22,6 +22,7 @@ services:
       retries: 10
 
   app:
+    image: trainmate-app
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -45,6 +46,8 @@ services:
     # Not published to the host in production — the tunnel/proxy reaches it over the compose network.
     expose:
       - '3000'
+    ports:
+      -  '3000:3000'
 
   # Ingress option A (recommended): Cloudflare Tunnel. `docker compose --profile tunnel up -d`.
   cloudflared:
