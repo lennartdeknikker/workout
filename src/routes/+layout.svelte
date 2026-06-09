@@ -1,11 +1,18 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
 	import { resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import TimerBar from '$components/TimerBar.svelte';
 	import { onMount } from 'svelte';
 	import { pwaInfo } from 'virtual:pwa-info';
+	import { authClient } from '$lib/auth-client';
 	import type { LayoutData } from './$types';
+
+	async function signOut() {
+		await authClient.signOut();
+		goto('/login');
+	}
 
 	let { children, data }: { data: LayoutData; children: import('svelte').Snippet } = $props();
 

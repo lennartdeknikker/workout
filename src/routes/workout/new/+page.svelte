@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import { randomId } from '$lib/utils';
 	import WorkoutTabs from '$components/WorkoutTabs.svelte';
 	import DraftForm from '$components/DraftForm.svelte';
 	import { workoutDrafts } from '$lib/stores/workoutDrafts.svelte';
@@ -13,12 +14,12 @@
 		workoutDrafts.hydrate();
 		if (workoutDrafts.drafts.length === 0 || workoutDrafts.allPosted) {
 			workoutDrafts.reset();
-			workoutDrafts.openTab(crypto.randomUUID());
+			workoutDrafts.openTab(randomId());
 		}
 	});
 
 	function addTab() {
-		if (workoutDrafts.canAddTab) workoutDrafts.openTab(crypto.randomUUID());
+		if (workoutDrafts.canAddTab) workoutDrafts.openTab(randomId());
 	}
 
 	function finished() {

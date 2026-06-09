@@ -40,7 +40,12 @@ const rateLimiter: Handle = async ({ event, resolve }) => {
 	const isSearch = pathname.startsWith('/api/exercise-search');
 
 	if (isAuth || isSearch) {
-		const ip = event.getClientAddress();
+		let ip: string;
+		try {
+			ip = event.getClientAddress();
+		} catch {
+			return resolve(event);
+		}
 		const bucket = isAuth ? 'auth' : 'search';
 		const limit = isAuth ? 30 : 60; // requests per minute, per IP
 		if (!rateLimit(`${bucket}:${ip}`, limit, 60_000)) {

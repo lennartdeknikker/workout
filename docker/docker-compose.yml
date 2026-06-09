@@ -42,7 +42,7 @@ services:
       ORIGIN: ${ORIGIN:-${PUBLIC_APP_URL}}
       PROTOCOL_HEADER: ${PROTOCOL_HEADER:-x-forwarded-proto}
       HOST_HEADER: ${HOST_HEADER:-x-forwarded-host}
-      ADDRESS_HEADER: ${ADDRESS_HEADER:-cf-connecting-ip}
+      ADDRESS_HEADER: ${ADDRESS_HEADER:-x-forwarded-for}
     # Not published to the host in production — the tunnel/proxy reaches it over the compose network.
     expose:
       - '3000'
