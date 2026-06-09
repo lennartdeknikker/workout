@@ -32,10 +32,6 @@
 	<a class="start" href={resolve('/workout/new')}>Start an exercise</a>
 {/if}
 
-<p class="signed-in">
-	Signed in as {data.user?.email} · <button onclick={signOut}>Sign out</button>
-</p>
-
 <style>
 	header {
 		display: flex;

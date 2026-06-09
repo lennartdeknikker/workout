@@ -48,9 +48,13 @@
 		height: 100vh;
 		display: flex;
 		align-items: center;
+		pointer-events: none;
+		overflow: hidden;
+		padding-left:3.2rem;
 	}
 
 	div {
+		pointer-events: all;
 		display: flex;
 		align-items: center;
 		justify-content: center;

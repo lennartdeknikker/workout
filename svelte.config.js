@@ -19,10 +19,12 @@ const config = {
 				'default-src': ['self'],
 				'script-src': ['self'],
 				// Scoped component styles are external in prod; inline style attributes need unsafe-inline.
-				'style-src': ['self', 'unsafe-inline'],
+				// fonts.googleapis.com serves the @font-face stylesheet.
+				'style-src': ['self', 'unsafe-inline', 'https://fonts.googleapis.com'],
 				// ExerciseDB GIFs are hotlinked; data: covers the inline SVG favicon.
 				'img-src': ['self', 'data:', 'https://static.exercisedb.dev'],
-				'font-src': ['self', 'data:'],
+				// fonts.gstatic.com serves the actual font files.
+				'font-src': ['self', 'data:', 'https://fonts.gstatic.com'],
 				'connect-src': ['self'],
 				'manifest-src': ['self'],
 				'worker-src': ['self'],
