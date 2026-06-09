@@ -2,7 +2,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import RestTimer from '$components/RestTimer.svelte';
+	import TimerBar from '$components/TimerBar.svelte';
 	import { onMount } from 'svelte';
 	import { pwaInfo } from 'virtual:pwa-info';
 	import type { LayoutData } from './$types';
@@ -43,7 +43,7 @@
 	</main>
 
 	{#if showNav}
-		<RestTimer />
+		<TimerBar />
 	{/if}
 </div>
 
@@ -63,5 +63,8 @@
 	}
 	nav strong {
 		margin-right: auto;
+		font-family: "Black Ops One", system-ui;
+		font-weight: 400;
+		font-style: normal;
 	}
 </style>
