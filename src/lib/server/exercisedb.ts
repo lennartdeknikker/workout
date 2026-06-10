@@ -6,18 +6,18 @@ import {
 	type RawExerciseDbDetail
 } from '$lib/domain/exercisedb';
 
-/**
- * Server-only ExerciseDB client. The browser never calls ExerciseDB directly:
- * the upstream 403s without a browser-like User-Agent and its search param is `search` (not `q`).
- * On any error/timeout these return an empty result so the UI can degrade to "add custom".
- */
+/** Server-only ExerciseDB v2 client (via RapidAPI). On any error/timeout returns empty so the UI can degrade. */
 
-const DEFAULT_BASE = 'https://oss.exercisedb.dev/api/v1';
-const USER_AGENT = 'Mozilla/5.0 (compatible; Trainmate/1.0)';
+const DEFAULT_BASE = 'https://edb-with-videos-and-images-by-ascendapi.p.rapidapi.com/api/v1';
+const RAPIDAPI_HOST = 'edb-with-videos-and-images-by-ascendapi.p.rapidapi.com';
 const TIMEOUT_MS = 5000;
 
 function baseUrl(): string {
 	return env.EXERCISEDB_BASE_URL || DEFAULT_BASE;
+}
+
+function apiKey(): string {
+	return env.EXERCISEDB_API_KEY ?? '';
 }
 
 async function fetchJson(url: string): Promise<unknown | null> {
@@ -25,7 +25,11 @@ async function fetchJson(url: string): Promise<unknown | null> {
 	const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 	try {
 		const res = await fetch(url, {
-			headers: { 'user-agent': USER_AGENT, accept: 'application/json' },
+			headers: {
+				'X-RapidAPI-Key': apiKey(),
+				'X-RapidAPI-Host': RAPIDAPI_HOST,
+				accept: 'application/json'
+			},
 			signal: controller.signal
 		});
 		if (!res.ok) return null;
@@ -37,14 +41,20 @@ async function fetchJson(url: string): Promise<unknown | null> {
 	}
 }
 
+interface RawSearchResult {
+	exerciseId: string;
+	name: string;
+	imageUrl: string;
+}
+
 export async function searchExercises(
 	query: string,
 	limit = 10
 ): Promise<ExerciseDbSearchResult[]> {
 	const url = `${baseUrl()}/exercises/search?search=${encodeURIComponent(query)}&limit=${limit}`;
-	const json = (await fetchJson(url)) as { data?: ExerciseDbSearchResult[] } | null;
+	const json = (await fetchJson(url)) as { data?: RawSearchResult[] } | null;
 	if (!json || !Array.isArray(json.data)) return [];
-	return json.data.map((d) => ({ exerciseId: d.exerciseId, name: d.name, gifUrl: d.gifUrl }));
+	return json.data.map((d) => ({ exerciseId: d.exerciseId, name: d.name, gifUrl: d.imageUrl }));
 }
 
 export async function getExerciseDetail(id: string): Promise<ExerciseDbSnapshot | null> {

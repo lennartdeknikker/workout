@@ -22,23 +22,33 @@ describe('mapExerciseDbDetail', () => {
 		const snapshot = mapExerciseDbDetail({
 			exerciseId: 'UDm6cGl',
 			name: 'kettlebell seesaw press',
-			gifUrl: 'https://static.exercisedb.dev/media/UDm6cGl.gif',
+			imageUrl: 'https://cdn.exercisedb.dev/media/UDm6cGl.jpg',
+			videoUrl: 'https://cdn.exercisedb.dev/videos/UDm6cGl.mp4',
+			overview: 'A great shoulder exercise.',
 			targetMuscles: ['delts'],
 			bodyParts: ['shoulders'],
 			equipments: ['kettlebell'],
 			secondaryMuscles: ['triceps', 'core'],
-			instructions: ['Step:1 Stand tall.', 'Step:2 Press overhead.']
+			instructions: ['Step:1 Stand tall.', 'Step:2 Press overhead.'],
+			exerciseTips: ['Keep your core tight.'],
+			variations: ['Single arm press'],
+			keywords: ['shoulder', 'kettlebell']
 		});
 
 		expect(snapshot).toEqual({
 			exerciseId: 'UDm6cGl',
 			name: 'kettlebell seesaw press',
-			gifUrl: 'https://static.exercisedb.dev/media/UDm6cGl.gif',
+			gifUrl: 'https://cdn.exercisedb.dev/media/UDm6cGl.jpg',
+			videoUrl: 'https://cdn.exercisedb.dev/videos/UDm6cGl.mp4',
+			overview: 'A great shoulder exercise.',
 			targetMuscles: ['delts'],
 			bodyParts: ['shoulders'],
 			equipments: ['kettlebell'],
 			secondaryMuscles: ['triceps', 'core'],
-			instructions: ['Stand tall.', 'Press overhead.']
+			instructions: ['Stand tall.', 'Press overhead.'],
+			exerciseTips: ['Keep your core tight.'],
+			variations: ['Single arm press'],
+			keywords: ['shoulder', 'kettlebell']
 		});
 	});
 
@@ -46,7 +56,7 @@ describe('mapExerciseDbDetail', () => {
 		const snapshot = mapExerciseDbDetail({
 			exerciseId: 'x1',
 			name: 'mystery move',
-			gifUrl: 'https://example.com/x1.gif'
+			imageUrl: 'https://example.com/x1.jpg'
 		});
 
 		expect(snapshot.targetMuscles).toEqual([]);

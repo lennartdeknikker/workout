@@ -22,11 +22,16 @@ export interface ExerciseTable {
 	// ExerciseDB snapshot (null for custom exercises).
 	exercise_db_id: string | null;
 	gif_url: string | null;
+	video_url: string | null;
+	overview: string | null;
 	target_muscles: string[];
 	body_parts: string[];
 	equipments: string[];
 	secondary_muscles: string[];
 	instructions: string[];
+	exercise_tips: string[];
+	variations: string[];
+	keywords: string[];
 
 	// Personal target ranges (presence depends on measurement_type).
 	sets_min: number | null;

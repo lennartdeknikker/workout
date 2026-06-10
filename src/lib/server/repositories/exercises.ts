@@ -16,11 +16,16 @@ function toRow(input: ExerciseInput, snapshot: ExerciseDbSnapshot | null) {
 
 		exercise_db_id: snapshot?.exerciseId ?? null,
 		gif_url: snapshot?.gifUrl ?? null,
+		video_url: snapshot?.videoUrl ?? null,
+		overview: snapshot?.overview ?? null,
 		target_muscles: snapshot?.targetMuscles ?? [],
 		body_parts: snapshot?.bodyParts ?? [],
 		equipments: snapshot?.equipments ?? [],
 		secondary_muscles: snapshot?.secondaryMuscles ?? [],
 		instructions: snapshot?.instructions ?? [],
+		exercise_tips: snapshot?.exerciseTips ?? [],
+		variations: snapshot?.variations ?? [],
+		keywords: snapshot?.keywords ?? [],
 
 		sets_min: input.setsMin ?? null,
 		sets_max: input.setsMax ?? null,

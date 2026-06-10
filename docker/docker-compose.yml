@@ -36,7 +36,8 @@ services:
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:?set BETTER_AUTH_URL}
       PUBLIC_APP_URL: ${PUBLIC_APP_URL:?set PUBLIC_APP_URL}
-      EXERCISEDB_BASE_URL: ${EXERCISEDB_BASE_URL:-https://oss.exercisedb.dev/api/v1}
+      EXERCISEDB_BASE_URL: ${EXERCISEDB_BASE_URL:-https://edb-with-videos-and-images-by-ascendapi.p.rapidapi.com/api/v1}
+      EXERCISEDB_API_KEY: ${EXERCISEDB_API_KEY:-}
       PORT: '3000'
       # adapter-node behind the reverse proxy / tunnel (see .env.example).
       ORIGIN: ${ORIGIN:-${PUBLIC_APP_URL}}
